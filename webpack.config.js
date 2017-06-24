@@ -9,7 +9,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.txt$/,
+        test: /\.html$/,
         use: 'raw-loader'
       },
       {

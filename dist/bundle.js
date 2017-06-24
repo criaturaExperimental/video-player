@@ -9792,10 +9792,14 @@ module.exports = g;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_component_template_html__);
+
 
 
 const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-  template: '<h1>Hello World!!</h1>'
+  template: __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default.a
+
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (AppComponent);
@@ -26890,7 +26894,7 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(10)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(11)(module)))
 
 /***/ }),
 /* 4 */
@@ -26907,7 +26911,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(8)(content, options);
+var update = __webpack_require__(9)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -27057,6 +27061,12 @@ function toComment(sourceMap) {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+module.exports = "<h1>FROM THE TEMPLATE!</h1>"
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -27102,7 +27112,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(9);
+var	fixUrls = __webpack_require__(10);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -27415,7 +27425,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 
@@ -27510,7 +27520,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
