@@ -3,7 +3,11 @@ import template from './app-component-template.html';
 
 const AppComponent = Vue.extend({
   template: template,
-
+    data() {
+      return {
+        number: 44
+      }
+    }
 });
 
 export default AppComponent;

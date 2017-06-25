@@ -9798,8 +9798,12 @@ module.exports = g;
 
 
 const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-  template: __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default.a
-
+  template: __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default.a,
+  data() {
+    return {
+      number: 44
+    };
+  }
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (AppComponent);
@@ -26945,7 +26949,7 @@ __webpack_require__(4);
 // don't worry, we haven't created this yet!
 
 
-new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
+const vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
   el: 'main',
   components: {
     'app-component': __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__["a" /* default */]
