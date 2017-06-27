@@ -9792,8 +9792,11 @@ module.exports = g;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_component_template_html__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__services_api__);
+
 
 
 
@@ -9801,7 +9804,7 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
   template: __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default.a,
   data() {
     return {
-      number: 44
+      test: true
     };
   }
 });
@@ -26898,7 +26901,7 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(11)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(13)(module)))
 
 /***/ }),
 /* 4 */
@@ -26907,7 +26910,7 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -26915,7 +26918,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(9)(content, options);
+var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -26944,34 +26947,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__ = __webpack_require__(2);
 
 __webpack_require__(4);
+const getInfo = __webpack_require__(6);
 
 
-// don't worry, we haven't created this yet!
 
 
-const vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
-  el: 'main',
-  components: {
-    'app-component': __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__["a" /* default */]
-  }
+const p1 = getInfo('config');
+const p2 = getInfo(845);
+
+Promise.all([p1, p2]).then(([r1, r2]) => {
+  new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
+    el: 'main',
+    components: {
+      'app-component': __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__["a" /* default */]
+    },
+    data: {
+      r1,
+      r2
+    }
+  });
 });
-
-function component() {
-  var element = document.createElement('div');
-
-  /* lodash is required for the next line to work */
-  element.innerHTML = __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.join(['Hello', 'webpack'], ' ');
-
-  return element;
-}
-
-document.body.appendChild(component());
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+const url = __webpack_require__(7);
+
+module.exports = function getInfo(code) {
+  return fetch(url(code), {
+    method: 'get'
+  }).then(function (response) {
+    return response.json();
+  }).catch(function (err) {
+    console.log('Error: ', err);
+  });
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+const apiKey = 'api_key=8a0710661d3c2195ca561e0323dd91f5';
+const urlGeneral = 'https://api.themoviedb.org/3/movie/';
+const urlConfig = 'https://api.themoviedb.org/3/configuration?';
+
+module.exports = function urlConstructor(params) {
+    if (params === 'config') {
+        return `${urlConfig}${apiKey}`;
+    } else {
+        return `${urlGeneral}${params}?${apiKey}`;
+    }
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(9)(undefined);
 // imports
 
 
@@ -26982,7 +27015,7 @@ exports.push([module.i, "body {\n  background-color: #ece7d5;\n}\n", ""]);
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /*
@@ -27064,13 +27097,13 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = "<h1>FROM THE TEMPLATE!</h1>"
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -27116,7 +27149,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(10);
+var	fixUrls = __webpack_require__(12);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -27429,7 +27462,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 
@@ -27524,7 +27557,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

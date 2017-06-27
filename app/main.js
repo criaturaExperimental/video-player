@@ -1,27 +1,24 @@
-import _ from 'lodash';
+import _ from 'lodash'
 require('./styles/base.styl')
+const getInfo = require('./services/api')
 
 import Vue from 'vue';
-// don't worry, we haven't created this yet!
-import AppComponent from './components/app-component/app-component';
+import AppComponent from './components/app-component/app-component'
 
-const vm = new Vue({
-  el: 'main',
-  components: {
-    'app-component': AppComponent
+const p1 = getInfo('config')
+const p2 = getInfo(845)
+
+Promise.all( [ p1, p2 ] ).then( ( [r1, r2] ) => {
+    new Vue({
+      el: 'main',
+      components: {
+        'app-component': AppComponent
+      },
+      data: {
+        r1,
+        r2
+      }
+    });
   }
-});
-
-
-
-function component () {
-  var element = document.createElement('div');
-
-  /* lodash is required for the next line to work */
-  element.innerHTML = _.join(['Hello','webpack'], ' ');
-
-  return element;
-}
-
-document.body.appendChild(component());
+)
 
