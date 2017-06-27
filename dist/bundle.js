@@ -27108,7 +27108,7 @@ function toComment(sourceMap) {
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = "<section>\n    <h1>{{ info.title }}</h1>\n    <h1>{{ info.original_title }}</h1>\n    <h3> {{ info.release_date }}</h3>\n    <article>\n        {{ info.overview }}\n    </article>\n    <!--<p>{{ config.images.base_url }}</p>-->\n    <p>{{ backdropUrl }}</p>\n    <p>{{ posterUrl }}</p>\n    <img :src=posterUrl alt=\"\">\n\n</section>"
+module.exports = "<section>\n    <section class=\"combo\">\n        <h1>{{ info.title }}</h1>\n        <h1>{{ info.original_title }}</h1>\n        <h3> {{ info.release_date }}</h3>\n        <article>\n            {{ info.overview }}\n        </article>\n    </section>\n    <p>{{ backdropUrl }}</p>\n    <p>{{ posterUrl }}</p>\n    <img :src=posterUrl alt=\"\">\n\n</section>"
 
 /***/ }),
 /* 11 */

@@ -1,11 +1,12 @@
 <section>
-    <h1>{{ info.title }}</h1>
-    <h1>{{ info.original_title }}</h1>
-    <h3> {{ info.release_date }}</h3>
-    <article>
-        {{ info.overview }}
-    </article>
-    <!--<p>{{ config.images.base_url }}</p>-->
+    <section class="combo">
+        <h1>{{ info.title }}</h1>
+        <h1>{{ info.original_title }}</h1>
+        <h3> {{ info.release_date }}</h3>
+        <article>
+            {{ info.overview }}
+        </article>
+    </section>
     <p>{{ backdropUrl }}</p>
     <p>{{ posterUrl }}</p>
     <img :src=posterUrl alt="">
