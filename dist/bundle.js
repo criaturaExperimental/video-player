@@ -63,11 +63,27 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const url = __webpack_require__(7);
+
+module.exports = function getInfo(code) {
+  return fetch(url(code), {
+    method: 'get'
+  }).then(function (response) {
+    return response.json();
+  }).catch(function (err) {
+    console.log('Error: ', err);
+  });
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -9756,10 +9772,10 @@ return Vue$3;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports) {
 
 var g;
@@ -9786,15 +9802,15 @@ module.exports = g;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_component_template_html__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__services_api__);
 
 
@@ -9807,13 +9823,21 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
     return {
       test: true
     };
+  },
+  computed: {
+    backdropUrl() {
+      return this.config.images.base_url + this.config.images.backdrop_sizes[2] + this.info.backdrop_path;
+    },
+    posterUrl() {
+      return this.config.images.base_url + this.config.images.poster_sizes[2] + this.info.poster_path;
+    }
   }
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (AppComponent);
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -26902,10 +26926,10 @@ const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(13)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(13)(module)))
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -26936,27 +26960,26 @@ if(false) {
 }
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_app_component_app_component__ = __webpack_require__(3);
 
-__webpack_require__(4);
-const getInfo = __webpack_require__(6);
-
-
+__webpack_require__(5);
+const getInfo = __webpack_require__(0);
 
 
-const p1 = getInfo('config');
-const p2 = getInfo(9761);
 
-Promise.all([p1, p2]).then(([r1, r2]) => {
+
+const promises = [getInfo('config'), getInfo(9761)];
+
+Promise.all(promises).then(([r1, r2]) => {
   new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
     el: 'main',
     components: {
@@ -26968,22 +26991,6 @@ Promise.all([p1, p2]).then(([r1, r2]) => {
     }
   });
 });
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const url = __webpack_require__(7);
-
-module.exports = function getInfo(code) {
-  return fetch(url(code), {
-    method: 'get'
-  }).then(function (response) {
-    return response.json();
-  }).catch(function (err) {
-    console.log('Error: ', err);
-  });
-};
 
 /***/ }),
 /* 7 */
@@ -27101,7 +27108,7 @@ function toComment(sourceMap) {
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = "<section>\n    <h1>FROM THE TEMPLATE!</h1>\n    <p>config:</p>\n    <pre>{{ config }}</pre>\n    <p>info:</p>\n    <pre>{{ info }}</pre>\n    \n</section>"
+module.exports = "<section>\n    <h1>{{ info.title }}</h1>\n    <h1>{{ info.original_title }}</h1>\n    <h3> {{ info.release_date }}</h3>\n    <article>\n        {{ info.overview }}\n    </article>\n    <!--<p>{{ config.images.base_url }}</p>-->\n    <p>{{ backdropUrl }}</p>\n    <p>{{ posterUrl }}</p>\n    <img :src=posterUrl alt=\"\">\n\n</section>"
 
 /***/ }),
 /* 11 */

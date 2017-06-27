@@ -1,8 +1,13 @@
 <section>
-    <h1>FROM THE TEMPLATE!</h1>
-    <p>config:</p>
-    <pre>{{ config }}</pre>
-    <p>info:</p>
-    <pre>{{ info }}</pre>
-    
+    <h1>{{ info.title }}</h1>
+    <h1>{{ info.original_title }}</h1>
+    <h3> {{ info.release_date }}</h3>
+    <article>
+        {{ info.overview }}
+    </article>
+    <!--<p>{{ config.images.base_url }}</p>-->
+    <p>{{ backdropUrl }}</p>
+    <p>{{ posterUrl }}</p>
+    <img :src=posterUrl alt="">
+
 </section>
