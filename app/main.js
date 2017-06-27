@@ -6,7 +6,7 @@ import Vue from 'vue';
 import AppComponent from './components/app-component/app-component'
 
 const p1 = getInfo('config')
-const p2 = getInfo(845)
+const p2 = getInfo(9761)
 
 Promise.all( [ p1, p2 ] ).then( ( [r1, r2] ) => {
     new Vue({

@@ -6,11 +6,15 @@ import getInfo from '../../services/api'
 
 const AppComponent = Vue.extend({
   template: template,
-    data() {
-      return {
-        test: true
-      }
+  props: [
+    'config',
+    'info'
+  ],
+  data() {
+    return {
+      test: true
     }
+  }
 });
 
 export default AppComponent;

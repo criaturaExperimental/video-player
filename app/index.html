@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <main>
-      <app-component></app-component>
+    <main v-cloak>
+      <app-component :config=r1 :info=r2 ></app-component>
+      <!--<h3>From root:</h3>
       <pre>{{ $data }}</pre>
+      <pre>{{ r2 }}</pre>-->
     </main>
     <script src="../dist/bundle.js"></script>
   </body>

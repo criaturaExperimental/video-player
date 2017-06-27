@@ -9802,6 +9802,7 @@ module.exports = g;
 
 const AppComponent = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
   template: __WEBPACK_IMPORTED_MODULE_1__app_component_template_html___default.a,
+  props: ['config', 'info'],
   data() {
     return {
       test: true
@@ -26953,7 +26954,7 @@ const getInfo = __webpack_require__(6);
 
 
 const p1 = getInfo('config');
-const p2 = getInfo(845);
+const p2 = getInfo(9761);
 
 Promise.all([p1, p2]).then(([r1, r2]) => {
   new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
@@ -27009,7 +27010,7 @@ exports = module.exports = __webpack_require__(9)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: #ece7d5;\n}\n", ""]);
+exports.push([module.i, "[v-cloak] {\n  display: none;\n}\nbody {\n  background-color: #ece7d5;\n}\n", ""]);
 
 // exports
 
@@ -27100,7 +27101,7 @@ function toComment(sourceMap) {
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>FROM THE TEMPLATE!</h1>"
+module.exports = "<section>\n    <h1>FROM THE TEMPLATE!</h1>\n    <p>config:</p>\n    <pre>{{ config }}</pre>\n    <p>info:</p>\n    <pre>{{ info }}</pre>\n    \n</section>"
 
 /***/ }),
 /* 11 */
