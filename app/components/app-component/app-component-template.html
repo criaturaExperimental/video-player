@@ -14,9 +14,13 @@
                     {{ info.overview }}
                 </div>
             </div>
+            <!--<div class="next" v-scroll-to="videoWrapper">
+                <a href="#" class="myButton">Play</a>
+            </div>-->
         </div>
-        <div class="bottom">
-            <video ref="videoElement"></video>
-        </div>
+    </div>
+    <div class="videoWrapper" ref="videoContainer">
+        <video ref="videoElement" controls ></video>
+        <div ref="videoCaption"></div>
     </div>
 </header>

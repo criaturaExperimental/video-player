@@ -2,7 +2,9 @@ import Vue from 'vue';
 import template from './app-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
+import vueScrollto from 'vue-scrollto'
 
+Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
   template: template,
   props: [
@@ -25,9 +27,11 @@ const AppComponent = Vue.extend({
 
   methods: {
     initializeVideo() {
-      const url = "https://dash.akamaized.net/envivio/Envivio-dash2/manifest.mpd";
+      const url = "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd";
       const player = MediaPlayer().create();
-      player.initialize(this.$refs.videoElement, url, true)
+      player.initialize(this.$refs.videoElement, url, false)
+      player.attachVideoContainer(this.$refs.videoContainer)
+      player.attachTTMLRenderingDiv(this.$refs.videoCaption)
     }
   },
   

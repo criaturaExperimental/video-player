@@ -33,7 +33,9 @@
     "babel-loader": "^7.0.0",
     "dashjs": "^2.5.0",
     "lodash": "^4.17.4",
-    "vue": "^2.3.4"
+    "plyr": "^2.0.13",
+    "vue": "^2.3.4",
+    "vue-scrollto": "^2.7.0"
   },
   "description": "A challenging web video player"
 }
