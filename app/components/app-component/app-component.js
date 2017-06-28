@@ -3,6 +3,7 @@ import template from './app-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
 import vueScrollto from 'vue-scrollto'
+import plyr from 'plyr'
 
 Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
@@ -30,8 +31,9 @@ const AppComponent = Vue.extend({
       const url = "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd";
       const player = MediaPlayer().create();
       player.initialize(this.$refs.videoElement, url, false)
-      player.attachVideoContainer(this.$refs.videoContainer)
-      player.attachTTMLRenderingDiv(this.$refs.videoCaption)
+      // player.attachVideoContainer(this.$refs.videoContainer)
+      // player.attachTTMLRenderingDiv(this.$refs.videoCaption)
+      plyr.setup(this.$refs.videoElement)
     }
   },
   
