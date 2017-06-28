@@ -4,6 +4,7 @@ import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
 import vueScrollto from 'vue-scrollto'
 import plyr from 'plyr'
+require('../../../node_modules/plyr/dist/plyr.css')
 
 Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
