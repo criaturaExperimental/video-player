@@ -31,14 +31,13 @@ const AppComponent = Vue.extend({
     initializeVideo() {
       const url = "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd";
       const options = {
-        autoplay: true,
         captions: true
       }
       const player = MediaPlayer().create();
       player.initialize(this.$refs.videoElement, url, false)
       player.attachVideoContainer(this.$refs.videoContainer)
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
-      plyr.setup(this.$refs.videoElement, options)
+      // plyr.setup(this.$refs.videoElement, options)
     }
   },
   
