@@ -1,13 +1,14 @@
 import _ from 'lodash'
 require('./styles/base.styl')
 const getInfo = require('./services/api')
+const mainConfig = require('./config/config.json')
 
 import Vue from 'vue';
 import AppComponent from './components/app-component/app-component'
 
 const promises = [
   getInfo('config'),
-  getInfo(9761)
+  getInfo(mainConfig.movie_code)
 ]
 
 Promise.all(promises).then(([r1, r2]) => {

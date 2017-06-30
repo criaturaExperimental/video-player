@@ -3,6 +3,7 @@ import template from './app-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
 import vueScrollto from 'vue-scrollto'
+const mainConfig = require('../../config/config.json')
 
 Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
@@ -27,7 +28,7 @@ const AppComponent = Vue.extend({
 
   methods: {
     initializeVideo() {
-      const url = "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd";
+      const url = mainConfig.video_url;
       const options = {
         captions: true
       }
@@ -37,9 +38,10 @@ const AppComponent = Vue.extend({
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
     }
   },
-  
+
   mounted() {
-    this.initializeVideo()
+    this.initializeVideo(),
+    window.document.title = `WatchZ ${this.info.title}`
   }
 });
 
