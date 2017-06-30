@@ -3,8 +3,6 @@ import template from './app-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
 import vueScrollto from 'vue-scrollto'
-import plyr from 'plyr'
-require('../../../node_modules/plyr/dist/plyr.css')
 
 Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
@@ -37,7 +35,6 @@ const AppComponent = Vue.extend({
       player.initialize(this.$refs.videoElement, url, false)
       player.attachVideoContainer(this.$refs.videoContainer)
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
-      // plyr.setup(this.$refs.videoElement, options)
     }
   },
   
