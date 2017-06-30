@@ -1,6 +1,8 @@
 @import './reset.styl'
 @import '../../node_modules/jeet/styl/index.styl'
 @import '../../node_modules/rupture/rupture/index.styl'
+@import './definitions/**/*'
+
 @import './info.styl'
 @import './player.styl'
 @import './ui.styl'
@@ -8,3 +10,5 @@
 
 body
   background-color #ece7d5
+  +below('desktop')
+    color red
