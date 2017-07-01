@@ -34,7 +34,7 @@ const AppComponent = Vue.extend({
       }
       const player = MediaPlayer().create();
       player.initialize(this.$refs.videoElement, url, false)
-      player.attachVideoContainer(this.$refs.videoContainer)
+      // player.attachVideoContainer(this.$refs.videoContainer)
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
     }
   },
