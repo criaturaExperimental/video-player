@@ -1,38 +1,41 @@
 <header>
-    <div class="panorama" v-bind:style="{ 'background-image': 'url(' + backdropUrl + ')' }">
+    <div class="backgroundImage" v-bind:style="{ 'background-image': 'url(' + backdropUrl + ')' }"></div>
+    <div class="panorama">
         <div class="wrapper">
             <div class="posterWrapper">
                 <img :src=posterUrl alt="movie poster">
             </div>
             <div class="info">
-                <div class="title">
-                    <h1>{{ info.title }}</h1>
-                    <h1>{{ info.original_title }}</h1>
-                    <h2>{{ info.tagline }}</h2>
-                    <h3>{{ info.release_date }}</h3>
+                <div class="headInfo">
+                    <h1 class="title">{{ info.title }}</h1>
+                    <h2 class="release">{{ info.release_date }}</h2>
+                    <h2 class="original_title">{{ info.original_title }}</h2>
+                    <h2 class="tagline">{{ info.tagline }}</h2>
                 </div>
                 <div class="overview">
                     {{ info.overview }}
                 </div>
-                <ul>
-                    <li v-for="genre in info.genres">{{ genre.name }}</li>
-                </ul>
-                <a :href=info.homepage>{{ info.homepage }}</a>
-                <p>Original language: {{ info.original_language }}</p>
-                <p>Vote average: {{ info.vote_average }}</p>
-                <p>Votes: {{ info.vote_count }}</p>
-                <p>Popularity: {{ info.popularity }}</p>
-                <p>{{ info.runtime }} mins</p>
-                <ul>
-                    <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
-                </ul>
-                <ul>
-                    <li v-for="company in info.production_companies">{{ company.name }}</li>
-                </ul>
-                <ul>
-                    <li v-for="country in info.production_countries">{{ country.name }}</li>
-                </ul>
-                <p>Budget: {{ info.budget }}</p>
+                <div class="moreInfo">
+                    <ul>
+                        <li v-for="genre in info.genres">{{ genre.name }}</li>
+                    </ul>
+                    <a :href=info.homepage>{{ info.homepage }}</a>
+                    <p>Original language: {{ info.original_language }}</p>
+                    <p>Vote average: {{ info.vote_average }}</p>
+                    <p>Votes: {{ info.vote_count }}</p>
+                    <p>Popularity: {{ info.popularity }}</p>
+                    <p>{{ info.runtime }} mins</p>
+                    <ul>
+                        <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
+                    </ul>
+                    <ul>
+                        <li v-for="company in info.production_companies">{{ company.name }}</li>
+                    </ul>
+                    <ul>
+                        <li v-for="country in info.production_countries">{{ country.name }}</li>
+                    </ul>
+                    <p>Budget: {{ info.budget }}</p>
+                </div>
 
             </div>
         </div>
