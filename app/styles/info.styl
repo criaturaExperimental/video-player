@@ -42,6 +42,8 @@ separation = 1%
 
     .moreInfo
       margin-top separation*4
+      .col
+        column(1/3)
       p
         margin separation 0
       ul
@@ -50,6 +52,9 @@ separation = 1%
         margin-right separation
         list-style none
         display inline-block
+      .infoTitle
+        font-style bold
+
       +below('desktop')
         stack()
 

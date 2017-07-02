@@ -17,25 +17,33 @@
                     <a :href=info.homepage>{{ info.homepage }}</a>
                 </div>
                 <div class="moreInfo">
-                    <ul>
+                    <div class="col">
+                        <p>Votes</p>
+                        <p>{{ info.vote_average }}</p>
+                        <p>{{ info.vote_count }}</p>
+                    </div>
+                    <div class="col">
                         <p>Genre</p>
-                        <li v-for="genre in info.genres">{{ genre.name }}</li>
-                    </ul>
-                    <p>Original language</p>
-                    <p>{{ info.original_language }}</p>
-                    <p>{{ info.vote_average }}</p>
-                    <p>Votes: {{ info.vote_count }}</p>
-                    <p>{{ hoursAndMin }}</p>
-                    <ul>
-                        <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
-                    </ul>
-                    <ul>
-                        <li v-for="company in info.production_companies">{{ company.name }}</li>
-                    </ul>
-                    <ul>
-                        <li v-for="country in info.production_countries">{{ country.name }}</li>
-                    </ul>
-                    <p>Budget: ${{ info.budget }}</p>
+                        <ul>
+                            <li v-for="genre in info.genres">{{ genre.name }}</li>
+                        </ul>
+                        <p class="infoTitle">Original language</p>
+                        <p>{{ info.original_language }}</p>
+                        <p>Runtime</p>
+                        <p>{{ hoursAndMin }}</p>
+                    </div>
+                    <div class="col">
+                        <p class="infoTitle">Spoken languages</p>
+                        <ul>
+                            <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
+                        </ul>
+                        <p class="infoTitle">Production countries</p>
+                        <ul>
+                            <li v-for="country in info.production_countries">{{ country.name }}</li>
+                        </ul>
+                        <p class="infoTitle">Budget</p>
+                        <p>{{ budgetFormat }}</p>
+                    </div>
                 </div>
 
             </div>

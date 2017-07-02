@@ -5,6 +5,7 @@ import {MediaPlayer} from 'dashjs';
 import vueScrollto from 'vue-scrollto'
 import moment from 'moment'
 import duration from 'moment-duration-format'
+import currencyFormat from 'currency-formatter'
 const mainConfig = require('../../config/config.json')
 
 Vue.use(vueScrollto)
@@ -31,6 +32,9 @@ const AppComponent = Vue.extend({
     },
     hoursAndMin() {
       return moment.duration(this.info.runtime, "minutes").format("h[h] m[m]");
+    },
+    budgetFormat() {
+      return currencyFormat.format(this.info.budget, { code: 'USD' });
     }
   },
 
