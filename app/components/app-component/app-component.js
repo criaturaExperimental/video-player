@@ -35,6 +35,9 @@ const AppComponent = Vue.extend({
     },
     budgetFormat() {
       return currencyFormat.format(this.info.budget, { code: 'USD' });
+    },
+    ratingPercentage() {
+      return `${this.info.vote_average * 10}%`
     }
   },
 

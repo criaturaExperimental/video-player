@@ -18,9 +18,12 @@
                 </div>
                 <div class="moreInfo">
                     <div class="col">
-                        <p>Votes</p>
-                        <p>{{ info.vote_average }}</p>
-                        <p>{{ info.vote_count }}</p>
+                        <p>Score</p>
+                        <div class="rateBack">
+                            <div class="rate" v-bind:style="{ width: ratingPercentage }">
+                                <div>{{ ratingPercentage }}</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col">
                         <p>Genre</p>

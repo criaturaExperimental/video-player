@@ -3,7 +3,7 @@ require('./styles/base.styl')
 const getInfo = require('./services/api')
 const mainConfig = require('./config/config.json')
 
-import Vue from 'vue';
+import Vue from 'vue'
 import AppComponent from './components/app-component/app-component'
 
 const promises = [
