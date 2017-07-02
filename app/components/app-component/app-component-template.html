@@ -8,23 +8,24 @@
             <div class="info">
                 <div class="headInfo">
                     <h1 class="title">{{ info.title }}</h1>
-                    <h2 class="release">{{ info.release_date }}</h2>
-                    <h2 class="original_title">{{ info.original_title }}</h2>
-                    <h2 class="tagline">{{ info.tagline }}</h2>
+                    <h2 class="release">({{ releaseYear }})</h2>
+                    <h2 class="original_title" v-if="info.title !== info.original_title">{{ info.original_title }}</h2>
+                    <h3 class="tagline">{{ info.tagline }}</h3>
                 </div>
                 <div class="overview">
                     {{ info.overview }}
+                    <a :href=info.homepage>{{ info.homepage }}</a>
                 </div>
                 <div class="moreInfo">
                     <ul>
+                        <p>Genre</p>
                         <li v-for="genre in info.genres">{{ genre.name }}</li>
                     </ul>
-                    <a :href=info.homepage>{{ info.homepage }}</a>
-                    <p>Original language: {{ info.original_language }}</p>
-                    <p>Vote average: {{ info.vote_average }}</p>
+                    <p>Original language</p>
+                    <p>{{ info.original_language }}</p>
+                    <p>{{ info.vote_average }}</p>
                     <p>Votes: {{ info.vote_count }}</p>
-                    <p>Popularity: {{ info.popularity }}</p>
-                    <p>{{ info.runtime }} mins</p>
+                    <p>{{ hoursAndMin }}</p>
                     <ul>
                         <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
                     </ul>
@@ -34,7 +35,7 @@
                     <ul>
                         <li v-for="country in info.production_countries">{{ country.name }}</li>
                     </ul>
-                    <p>Budget: {{ info.budget }}</p>
+                    <p>Budget: ${{ info.budget }}</p>
                 </div>
 
             </div>

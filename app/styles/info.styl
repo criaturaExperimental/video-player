@@ -1,33 +1,57 @@
-dist = 500px
+separation = 1%
 
 .panorama
   padding 3%
-  height dist
   z-index 5
   position relative
-  background-color rgba(25.5%, 51.8%, 76.9%, 0.75)
+  background-color backdrop-layer-color
 
   .wrapper
     center()
     .posterWrapper
       column(1/3)
-      +below('desktop')
-        stack()
       img
         center()
+      +below('desktop')
+        stack()
     .info
-      color white
+      color text-color
       column(2/3)
+      .title
+        display inline-block
+      .release
+        display inline-block
+        margin-left 1%
+        color lightness(text-color, 75%)
+      .tagline
+        margin-top 1%
+        font-style italic
+        color lightness(text-color, 85%)
       +below('desktop')
         stack()
 
     .overview
       clear both
+      margin-top separation*4
+      a
+        text-decoration none
+        display block
+        margin-top separation
+      +below('desktop')
+        stack()
 
-    .next
-      clear both
-      width 100%
-      text-align center
+    .moreInfo
+      margin-top separation*4
+      p
+        margin separation 0
+      ul
+        margin-top separation
+      li
+        margin-right separation
+        list-style none
+        display inline-block
+      +below('desktop')
+        stack()
 
 .backgroundImage
   position absolute
