@@ -38,10 +38,8 @@ const AppComponent = Vue.extend({
     },
     ratingPercentage() {
       return `${this.info.vote_average * 10}%`
-    },
-    changeDirection() {
-      return this.direction
     }
+
   },
 
   methods: {
@@ -50,12 +48,20 @@ const AppComponent = Vue.extend({
       const player = MediaPlayer().create();
       player.initialize(this.$refs.videoElement, url, false)
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
+    },
+    changeDirection() {
+      if( this.direction === 'rtl') {
+        this.direction = 'ltr'
+      } else {
+        this.direction = 'rtl'
+      }
     }
   },
 
   mounted() {
     this.initializeVideo(),
-    window.document.title = `WatchZ ${this.info.title}`
+    window.document.title = `WatchZ ${this.info.title}`,
+    this.changeDirection()
   }
 });
 
