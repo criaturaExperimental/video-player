@@ -8,7 +8,7 @@ import duration from 'moment-duration-format'
 import currencyFormat from 'currency-formatter'
 const mainConfig = require('../../config/config.json')
 
-const AppComponent = Vue.extend({
+const MovieComponent = Vue.extend({
   template: template,
   props: [
     'config',
@@ -69,4 +69,4 @@ const AppComponent = Vue.extend({
   }
 });
 
-export default AppComponent;
+export default MovieComponent;

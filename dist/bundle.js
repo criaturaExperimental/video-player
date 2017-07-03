@@ -45466,7 +45466,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mainConfig = __webpack_require__(51);
 
-var AppComponent = _vue2.default.extend({
+var MovieComponent = _vue2.default.extend({
   template: _movieComponentTemplate2.default,
   props: ['config', 'info'],
   data: function data() {
@@ -45523,7 +45523,7 @@ var AppComponent = _vue2.default.extend({
   }
 });
 
-exports.default = AppComponent;
+exports.default = MovieComponent;
 
 /***/ }),
 /* 190 */
