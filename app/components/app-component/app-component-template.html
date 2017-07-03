@@ -1,6 +1,6 @@
 <header>
     <div class="dirButton">
-        <button type="" v-on:click=changeDirection>Direction</button>
+        <button type="" v-on:click=changeDirection>Change text direction?</button>
     </div>
     <div class="backgroundImage" v-bind:style="{ 'background-image': 'url(' + backdropUrl + ')' }"></div>
     <div class="panorama">
@@ -15,11 +15,11 @@
                     <h2 class="original_title" v-if="info.title !== info.original_title">{{ info.original_title }}</h2>
                     <h3 class="tagline">{{ info.tagline }}</h3>
                 </div>
-                <div class="overview">
+                <div class="overview" v-bind:style="{direction: $data.direction}">
                     {{ info.overview }}
                     <a :href=info.homepage>{{ info.homepage }}</a>
                 </div>
-                <div class="moreInfo">
+                <div class="moreInfo" v-bind:style="{direction: $data.direction}">
                     <div class="buttonContainer">
                         <a href="#player" class="myButton">Play</a>
                     </div>
@@ -41,7 +41,7 @@
                             </ul>
                             <p class="infoTitle">Original language</p>
                             <p>{{ info.original_language }}</p>
-                            <p>Runtime</p>
+                            <p class="infoTitle">Runtime</p>
                             <p>{{ hoursAndMin }}</p>
                         </div>
                         <div class="col2">
@@ -65,7 +65,7 @@
     <div id="player" class="videoWrapper">
         <div class="videoContainer" ref="videoContainer">
             <video ref="videoElement" controls></video>
-            <div  class="videoCaption" ref="videoCaption"></div>
+            <div  class="videoCaption" ref="videoCaption" v-bind:style="{direction: $data.direction}"></div>
         </div>
     </div>
 </header>
