@@ -4,7 +4,7 @@ const getInfo = require('./services/api')
 const mainConfig = require('./config/config.json')
 
 import Vue from 'vue'
-import AppComponent from './components/app-component/app-component'
+import AppComponent from './components/movie-component/movie-component'
 
 const promises = [
   getInfo('config'),
@@ -15,7 +15,7 @@ Promise.all(promises).then(([r1, r2]) => {
   new Vue({
     el: 'main',
     components: {
-      'app-component': AppComponent
+      'movie-component': AppComponent
     },
     data: {
       r1,
