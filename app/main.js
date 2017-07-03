@@ -1,4 +1,3 @@
-import _ from 'lodash'
 require('./styles/base.styl')
 const getInfo = require('./services/api')
 const mainConfig = require('./config/config.json')

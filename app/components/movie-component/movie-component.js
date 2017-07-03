@@ -3,13 +3,11 @@ import bowser from 'bowser'
 import template from './movie-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
-import vueScrollto from 'vue-scrollto'
 import moment from 'moment'
 import duration from 'moment-duration-format'
 import currencyFormat from 'currency-formatter'
 const mainConfig = require('../../config/config.json')
 
-Vue.use(vueScrollto)
 const AppComponent = Vue.extend({
   template: template,
   props: [
