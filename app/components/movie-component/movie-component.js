@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import bowser from 'bowser'
 import template from './movie-component-template.html';
 import getInfo from '../../services/api'
 import {MediaPlayer} from 'dashjs';
@@ -17,7 +18,8 @@ const AppComponent = Vue.extend({
   ],
   data() {
     return {
-      direction: 'rtl'
+      direction: 'ltr',
+      video_url: undefined
     }
   },
   computed: {
@@ -31,10 +33,10 @@ const AppComponent = Vue.extend({
       return moment(this.info.release_date).year()
     },
     hoursAndMin() {
-      return moment.duration(this.info.runtime, "minutes").format("h[h] m[m]");
+      return moment.duration(this.info.runtime, "minutes").format("h[h] m[m]")
     },
     budgetFormat() {
-      return currencyFormat.format(this.info.budget, { code: 'USD' });
+      return currencyFormat.format(this.info.budget, { code: 'USD' })
     },
     ratingPercentage() {
       return `${this.info.vote_average * 10}%`
@@ -44,10 +46,15 @@ const AppComponent = Vue.extend({
 
   methods: {
     initializeVideo() {
-      const url = mainConfig.video_url;
-      const player = MediaPlayer().create();
-      player.initialize(this.$refs.videoElement, url, false)
-      player.attachTTMLRenderingDiv(this.$refs.videoCaption)
+      if( bowser.safari ){
+        this.video_url = mainConfig.safari_video_url
+      } else {
+        this.video_url = mainConfig.main_video_url
+        const url = this.video_url;
+        const player = MediaPlayer().create();
+        player.initialize(this.$refs.videoElement, url, false)
+        player.attachTTMLRenderingDiv(this.$refs.videoCaption)
+      }
     },
     changeDirection() {
       if( this.direction === 'rtl') {
@@ -60,8 +67,7 @@ const AppComponent = Vue.extend({
 
   mounted() {
     this.initializeVideo(),
-    window.document.title = `WatchZ ${this.info.title}`,
-    this.changeDirection()
+    window.document.title = `WatchZ ${this.info.title}`
   }
 });
 

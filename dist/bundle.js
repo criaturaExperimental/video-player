@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,7 +72,8 @@
 
 module.exports = {
 	"movie_code": 9761,
-	"video_url": "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd"
+	"main_video_url": "http://media.axprod.net/dash/ED_TTML_NEW/Clear/Manifest_sub_in.mpd",
+	"safari_video_url": "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
 };
 
 /***/ }),
@@ -82,7 +83,116 @@ module.exports = {
 "use strict";
 
 
-var url = __webpack_require__(5);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _vue = __webpack_require__(4);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _bowser = __webpack_require__(198);
+
+var _bowser2 = _interopRequireDefault(_bowser);
+
+var _movieComponentTemplate = __webpack_require__(325);
+
+var _movieComponentTemplate2 = _interopRequireDefault(_movieComponentTemplate);
+
+var _api = __webpack_require__(2);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _dashjs = __webpack_require__(203);
+
+var _vueScrollto = __webpack_require__(327);
+
+var _vueScrollto2 = _interopRequireDefault(_vueScrollto);
+
+var _moment = __webpack_require__(12);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _momentDurationFormat = __webpack_require__(322);
+
+var _momentDurationFormat2 = _interopRequireDefault(_momentDurationFormat);
+
+var _currencyFormatter = __webpack_require__(200);
+
+var _currencyFormatter2 = _interopRequireDefault(_currencyFormatter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mainConfig = __webpack_require__(0);
+
+_vue2.default.use(_vueScrollto2.default);
+var AppComponent = _vue2.default.extend({
+  template: _movieComponentTemplate2.default,
+  props: ['config', 'info'],
+  data: function data() {
+    return {
+      direction: 'ltr',
+      video_url: undefined
+    };
+  },
+
+  computed: {
+    backdropUrl: function backdropUrl() {
+      return this.config.images.base_url + this.config.images.backdrop_sizes[3] + this.info.backdrop_path;
+    },
+    posterUrl: function posterUrl() {
+      return this.config.images.base_url + this.config.images.poster_sizes[3] + this.info.poster_path;
+    },
+    releaseYear: function releaseYear() {
+      return (0, _moment2.default)(this.info.release_date).year();
+    },
+    hoursAndMin: function hoursAndMin() {
+      return _moment2.default.duration(this.info.runtime, "minutes").format("h[h] m[m]");
+    },
+    budgetFormat: function budgetFormat() {
+      return _currencyFormatter2.default.format(this.info.budget, { code: 'USD' });
+    },
+    ratingPercentage: function ratingPercentage() {
+      return this.info.vote_average * 10 + '%';
+    }
+  },
+
+  methods: {
+    initializeVideo: function initializeVideo() {
+      if (_bowser2.default.safari) {
+        this.video_url = mainConfig.safari_video_url;
+      } else {
+        this.video_url = mainConfig.main_video_url;
+        var url = this.video_url;
+        var player = (0, _dashjs.MediaPlayer)().create();
+        player.initialize(this.$refs.videoElement, url, false);
+        player.attachTTMLRenderingDiv(this.$refs.videoCaption);
+      }
+    },
+    changeDirection: function changeDirection() {
+      if (this.direction === 'rtl') {
+        this.direction = 'ltr';
+      } else {
+        this.direction = 'rtl';
+      }
+    }
+  },
+
+  mounted: function mounted() {
+    this.initializeVideo(), window.document.title = 'WatchZ ' + this.info.title;
+  }
+});
+
+exports.default = AppComponent;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var url = __webpack_require__(6);
 
 module.exports = function getInfo(code) {
   return fetch(url(code), {
@@ -95,13 +205,13 @@ module.exports = function getInfo(code) {
 };
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -109,7 +219,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(8)(content, options);
+var update = __webpack_require__(9)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -126,7 +236,7 @@ if(false) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -9815,10 +9925,10 @@ return Vue$3;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9826,18 +9936,18 @@ return Vue$3;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _vue = __webpack_require__(3);
+var _vue = __webpack_require__(4);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _movieComponent = __webpack_require__(196);
+var _movieComponent = __webpack_require__(1);
 
 var _movieComponent2 = _interopRequireDefault(_movieComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-__webpack_require__(2);
-var getInfo = __webpack_require__(1);
+__webpack_require__(3);
+var getInfo = __webpack_require__(2);
 var mainConfig = __webpack_require__(0);
 
 var promises = [getInfo('config'), getInfo(mainConfig.movie_code)];
@@ -9860,7 +9970,7 @@ Promise.all(promises).then(function (_ref) {
 });
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9879,10 +9989,10 @@ module.exports = function urlConstructor(params) {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(8)(undefined);
 // imports
 
 
@@ -9893,7 +10003,7 @@ exports.push([module.i, "* {\n  padding: 0;\n  margin: 0;\n}\n[v-cloak] {\n  dis
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -9975,7 +10085,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -10021,7 +10131,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(9);
+var	fixUrls = __webpack_require__(10);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -10334,7 +10444,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 
@@ -10429,7 +10539,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var g;
@@ -10456,7 +10566,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -12288,7 +12398,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(322)("./" + name);
+            __webpack_require__(323)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -14923,10 +15033,10 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(326)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(329)(module)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15110,7 +15220,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15162,7 +15272,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _CoreEvents2 = __webpack_require__(203);
+var _CoreEvents2 = __webpack_require__(204);
 
 var _CoreEvents3 = _interopRequireDefault(_CoreEvents2);
 
@@ -15185,7 +15295,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15227,7 +15337,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _FactoryMaker = __webpack_require__(12);
+var _FactoryMaker = __webpack_require__(13);
 
 var _FactoryMaker2 = _interopRequireDefault(_FactoryMaker);
 
@@ -15333,7 +15443,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15375,15 +15485,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _EventBus = __webpack_require__(14);
+var _EventBus = __webpack_require__(15);
 
 var _EventBus2 = _interopRequireDefault(_EventBus);
 
-var _eventsEvents = __webpack_require__(13);
+var _eventsEvents = __webpack_require__(14);
 
 var _eventsEvents2 = _interopRequireDefault(_eventsEvents);
 
-var _FactoryMaker = __webpack_require__(12);
+var _FactoryMaker = __webpack_require__(13);
 
 var _FactoryMaker2 = _interopRequireDefault(_FactoryMaker);
 
@@ -15485,7 +15595,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15529,11 +15639,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
 var DEFAULT_UTC_TIMING_SOURCE = { scheme: 'urn:mpeg:dash:utc:http-xsdate:2014', value: 'http://time.akamai.com/?iso' };
 var LIVE_DELAY_FRAGMENT_COUNT = 4;
@@ -15917,7 +16027,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16100,7 +16210,7 @@ exports.HTTPRequestTrace = HTTPRequestTrace;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16160,77 +16270,6 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/**
- * The copyright in this software is being made available under the BSD License,
- * included below. This software may be subject to other third party and contributor
- * rights, including patent rights, and no such rights are granted under this license.
- *
- * Copyright (c) 2013, Dash Industry Forum.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *  * Redistributions of source code must retain the above copyright notice, this
- *  list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright notice,
- *  this list of conditions and the following disclaimer in the documentation and/or
- *  other materials provided with the distribution.
- *  * Neither the name of Dash Industry Forum nor the names of its
- *  contributors may be used to endorse or promote products derived from this software
- *  without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY
- *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- *  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- *  POSSIBILITY OF SUCH DAMAGE.
- */
-
-
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _coreFactoryMaker = __webpack_require__(12);
-
-var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
-
-var NO_CHANGE = -1;
-
-function SwitchRequest(v, r) {
-    //TODO refactor all the calls to this to use config to be like everything else.
-    var value = v === undefined ? NO_CHANGE : v;
-    var reason = r === undefined ? null : r;
-
-    var instance = {
-        value: value,
-        reason: reason
-    };
-
-    return instance;
-}
-
-SwitchRequest.__dashjs_factory_name = 'SwitchRequest';
-var factory = _coreFactoryMaker2['default'].getClassFactory(SwitchRequest);
-factory.NO_CHANGE = NO_CHANGE;
-exports['default'] = factory;
-module.exports = exports['default'];
-//# sourceMappingURL=SwitchRequest.js.map
-
-
-/***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16267,65 +16306,136 @@ module.exports = exports['default'];
  */
 
 
+
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voMetricsList = __webpack_require__(304);
-
-var _voMetricsList2 = _interopRequireDefault(_voMetricsList);
-
-var _voMetricsTCPConnection = __webpack_require__(318);
-
-var _voMetricsTCPConnection2 = _interopRequireDefault(_voMetricsTCPConnection);
-
-var _voMetricsHTTPRequest = __webpack_require__(17);
-
-var _voMetricsRepresentationSwitch = __webpack_require__(315);
-
-var _voMetricsRepresentationSwitch2 = _interopRequireDefault(_voMetricsRepresentationSwitch);
-
-var _voMetricsBufferLevel = __webpack_require__(310);
-
-var _voMetricsBufferLevel2 = _interopRequireDefault(_voMetricsBufferLevel);
-
-var _voMetricsBufferState = __webpack_require__(311);
-
-var _voMetricsBufferState2 = _interopRequireDefault(_voMetricsBufferState);
-
-var _voMetricsDVRInfo = __webpack_require__(312);
-
-var _voMetricsDVRInfo2 = _interopRequireDefault(_voMetricsDVRInfo);
-
-var _voMetricsDroppedFrames = __webpack_require__(313);
-
-var _voMetricsDroppedFrames2 = _interopRequireDefault(_voMetricsDroppedFrames);
-
-var _voMetricsManifestUpdate = __webpack_require__(314);
-
-var _voMetricsSchedulingInfo = __webpack_require__(317);
-
-var _voMetricsSchedulingInfo2 = _interopRequireDefault(_voMetricsSchedulingInfo);
-
-var _coreEventBus = __webpack_require__(14);
-
-var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
-
-var _voMetricsRequestsQueue = __webpack_require__(316);
-
-var _voMetricsRequestsQueue2 = _interopRequireDefault(_voMetricsRequestsQueue);
-
-var _coreEventsEvents = __webpack_require__(13);
-
-var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
-
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voMetricsBolaState = __webpack_require__(309);
+var NO_CHANGE = -1;
+
+function SwitchRequest(v, r) {
+    //TODO refactor all the calls to this to use config to be like everything else.
+    var value = v === undefined ? NO_CHANGE : v;
+    var reason = r === undefined ? null : r;
+
+    var instance = {
+        value: value,
+        reason: reason
+    };
+
+    return instance;
+}
+
+SwitchRequest.__dashjs_factory_name = 'SwitchRequest';
+var factory = _coreFactoryMaker2['default'].getClassFactory(SwitchRequest);
+factory.NO_CHANGE = NO_CHANGE;
+exports['default'] = factory;
+module.exports = exports['default'];
+//# sourceMappingURL=SwitchRequest.js.map
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * The copyright in this software is being made available under the BSD License,
+ * included below. This software may be subject to other third party and contributor
+ * rights, including patent rights, and no such rights are granted under this license.
+ *
+ * Copyright (c) 2013, Dash Industry Forum.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *  * Redistributions of source code must retain the above copyright notice, this
+ *  list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  * Neither the name of Dash Industry Forum nor the names of its
+ *  contributors may be used to endorse or promote products derived from this software
+ *  without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ *  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _voMetricsList = __webpack_require__(305);
+
+var _voMetricsList2 = _interopRequireDefault(_voMetricsList);
+
+var _voMetricsTCPConnection = __webpack_require__(319);
+
+var _voMetricsTCPConnection2 = _interopRequireDefault(_voMetricsTCPConnection);
+
+var _voMetricsHTTPRequest = __webpack_require__(18);
+
+var _voMetricsRepresentationSwitch = __webpack_require__(316);
+
+var _voMetricsRepresentationSwitch2 = _interopRequireDefault(_voMetricsRepresentationSwitch);
+
+var _voMetricsBufferLevel = __webpack_require__(311);
+
+var _voMetricsBufferLevel2 = _interopRequireDefault(_voMetricsBufferLevel);
+
+var _voMetricsBufferState = __webpack_require__(312);
+
+var _voMetricsBufferState2 = _interopRequireDefault(_voMetricsBufferState);
+
+var _voMetricsDVRInfo = __webpack_require__(313);
+
+var _voMetricsDVRInfo2 = _interopRequireDefault(_voMetricsDVRInfo);
+
+var _voMetricsDroppedFrames = __webpack_require__(314);
+
+var _voMetricsDroppedFrames2 = _interopRequireDefault(_voMetricsDroppedFrames);
+
+var _voMetricsManifestUpdate = __webpack_require__(315);
+
+var _voMetricsSchedulingInfo = __webpack_require__(318);
+
+var _voMetricsSchedulingInfo2 = _interopRequireDefault(_voMetricsSchedulingInfo);
+
+var _coreEventBus = __webpack_require__(15);
+
+var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
+
+var _voMetricsRequestsQueue = __webpack_require__(317);
+
+var _voMetricsRequestsQueue2 = _interopRequireDefault(_voMetricsRequestsQueue);
+
+var _coreEventsEvents = __webpack_require__(14);
+
+var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
+
+var _coreFactoryMaker = __webpack_require__(13);
+
+var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
+
+var _voMetricsBolaState = __webpack_require__(310);
 
 var _voMetricsBolaState2 = _interopRequireDefault(_voMetricsBolaState);
 
@@ -16732,7 +16842,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16774,15 +16884,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -16874,7 +16984,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16918,25 +17028,25 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _streamingVoMetricsHTTPRequest = __webpack_require__(17);
+var _streamingVoMetricsHTTPRequest = __webpack_require__(18);
 
-var _streamingModelsManifestModel = __webpack_require__(41);
+var _streamingModelsManifestModel = __webpack_require__(42);
 
 var _streamingModelsManifestModel2 = _interopRequireDefault(_streamingModelsManifestModel);
 
-var _modelsDashManifestModel = __webpack_require__(23);
+var _modelsDashManifestModel = __webpack_require__(24);
 
 var _modelsDashManifestModel2 = _interopRequireDefault(_modelsDashManifestModel);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _constantsDashMetricsList = __webpack_require__(65);
+var _constantsDashMetricsList = __webpack_require__(66);
 
 var MetricsList = _interopRequireWildcard(_constantsDashMetricsList);
 
-var _round10 = __webpack_require__(324);
+var _round10 = __webpack_require__(326);
 
 /**
  * @module DashMetrics
@@ -17305,7 +17415,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17348,55 +17458,55 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voRepresentation = __webpack_require__(48);
+var _voRepresentation = __webpack_require__(49);
 
 var _voRepresentation2 = _interopRequireDefault(_voRepresentation);
 
-var _voAdaptationSet = __webpack_require__(221);
+var _voAdaptationSet = __webpack_require__(222);
 
 var _voAdaptationSet2 = _interopRequireDefault(_voAdaptationSet);
 
-var _voPeriod = __webpack_require__(224);
+var _voPeriod = __webpack_require__(225);
 
 var _voPeriod2 = _interopRequireDefault(_voPeriod);
 
-var _voMpd = __webpack_require__(223);
+var _voMpd = __webpack_require__(224);
 
 var _voMpd2 = _interopRequireDefault(_voMpd);
 
-var _voUTCTiming = __webpack_require__(69);
+var _voUTCTiming = __webpack_require__(70);
 
 var _voUTCTiming2 = _interopRequireDefault(_voUTCTiming);
 
-var _utilsTimelineConverter = __webpack_require__(47);
+var _utilsTimelineConverter = __webpack_require__(48);
 
 var _utilsTimelineConverter2 = _interopRequireDefault(_utilsTimelineConverter);
 
-var _streamingControllersMediaController = __webpack_require__(27);
+var _streamingControllersMediaController = __webpack_require__(28);
 
 var _streamingControllersMediaController2 = _interopRequireDefault(_streamingControllersMediaController);
 
-var _DashAdapter = __webpack_require__(46);
+var _DashAdapter = __webpack_require__(47);
 
 var _DashAdapter2 = _interopRequireDefault(_DashAdapter);
 
-var _voEvent = __webpack_require__(68);
+var _voEvent = __webpack_require__(69);
 
 var _voEvent2 = _interopRequireDefault(_voEvent);
 
-var _voBaseURL = __webpack_require__(67);
+var _voBaseURL = __webpack_require__(68);
 
 var _voBaseURL2 = _interopRequireDefault(_voBaseURL);
 
-var _voEventStream = __webpack_require__(222);
+var _voEventStream = __webpack_require__(223);
 
 var _voEventStream2 = _interopRequireDefault(_voEventStream);
 
-var _streamingUtilsURLUtils = __webpack_require__(34);
+var _streamingUtilsURLUtils = __webpack_require__(35);
 
 var _streamingUtilsURLUtils2 = _interopRequireDefault(_streamingUtilsURLUtils);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -18275,7 +18385,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18318,75 +18428,75 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voBitrateInfo = __webpack_require__(298);
+var _voBitrateInfo = __webpack_require__(299);
 
 var _voBitrateInfo2 = _interopRequireDefault(_voBitrateInfo);
 
-var _utilsDOMStorage = __webpack_require__(59);
+var _utilsDOMStorage = __webpack_require__(60);
 
 var _utilsDOMStorage2 = _interopRequireDefault(_utilsDOMStorage);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _modelsFragmentModel = __webpack_require__(40);
+var _modelsFragmentModel = __webpack_require__(41);
 
 var _modelsFragmentModel2 = _interopRequireDefault(_modelsFragmentModel);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _MediaPlayerEventsJs = __webpack_require__(30);
+var _MediaPlayerEventsJs = __webpack_require__(31);
 
 var _MediaPlayerEventsJs2 = _interopRequireDefault(_MediaPlayerEventsJs);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _modelsManifestModel = __webpack_require__(41);
+var _modelsManifestModel = __webpack_require__(42);
 
 var _modelsManifestModel2 = _interopRequireDefault(_modelsManifestModel);
 
-var _dashModelsDashManifestModel = __webpack_require__(23);
+var _dashModelsDashManifestModel = __webpack_require__(24);
 
 var _dashModelsDashManifestModel2 = _interopRequireDefault(_dashModelsDashManifestModel);
 
-var _modelsVideoModel = __webpack_require__(32);
+var _modelsVideoModel = __webpack_require__(33);
 
 var _modelsVideoModel2 = _interopRequireDefault(_modelsVideoModel);
 
-var _rulesRulesContextJs = __webpack_require__(274);
+var _rulesRulesContextJs = __webpack_require__(275);
 
 var _rulesRulesContextJs2 = _interopRequireDefault(_rulesRulesContextJs);
 
-var _rulesSwitchRequestJs = __webpack_require__(19);
+var _rulesSwitchRequestJs = __webpack_require__(20);
 
 var _rulesSwitchRequestJs2 = _interopRequireDefault(_rulesSwitchRequestJs);
 
-var _rulesSwitchRequestHistoryJs = __webpack_require__(275);
+var _rulesSwitchRequestHistoryJs = __webpack_require__(276);
 
 var _rulesSwitchRequestHistoryJs2 = _interopRequireDefault(_rulesSwitchRequestHistoryJs);
 
-var _rulesDroppedFramesHistoryJs = __webpack_require__(273);
+var _rulesDroppedFramesHistoryJs = __webpack_require__(274);
 
 var _rulesDroppedFramesHistoryJs2 = _interopRequireDefault(_rulesDroppedFramesHistoryJs);
 
-var _modelsMetricsModelJs = __webpack_require__(20);
+var _modelsMetricsModelJs = __webpack_require__(21);
 
 var _modelsMetricsModelJs2 = _interopRequireDefault(_modelsMetricsModelJs);
 
-var _dashDashMetricsJs = __webpack_require__(22);
+var _dashDashMetricsJs = __webpack_require__(23);
 
 var _dashDashMetricsJs2 = _interopRequireDefault(_dashDashMetricsJs);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -18983,7 +19093,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19026,51 +19136,51 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _modelsFragmentModel = __webpack_require__(40);
+var _modelsFragmentModel = __webpack_require__(41);
 
 var _modelsFragmentModel2 = _interopRequireDefault(_modelsFragmentModel);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _SourceBufferController = __webpack_require__(38);
+var _SourceBufferController = __webpack_require__(39);
 
 var _SourceBufferController2 = _interopRequireDefault(_SourceBufferController);
 
-var _AbrController = __webpack_require__(24);
+var _AbrController = __webpack_require__(25);
 
 var _AbrController2 = _interopRequireDefault(_AbrController);
 
-var _PlaybackController = __webpack_require__(26);
+var _PlaybackController = __webpack_require__(27);
 
 var _PlaybackController2 = _interopRequireDefault(_PlaybackController);
 
-var _MediaController = __webpack_require__(27);
+var _MediaController = __webpack_require__(28);
 
 var _MediaController2 = _interopRequireDefault(_MediaController);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _utilsBoxParser = __webpack_require__(58);
+var _utilsBoxParser = __webpack_require__(59);
 
 var _utilsBoxParser2 = _interopRequireDefault(_utilsBoxParser);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _utilsInitCache = __webpack_require__(60);
+var _utilsInitCache = __webpack_require__(61);
 
 var _utilsInitCache2 = _interopRequireDefault(_utilsInitCache);
 
@@ -19591,7 +19701,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19633,31 +19743,31 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _BufferController = __webpack_require__(25);
+var _BufferController = __webpack_require__(26);
 
 var _BufferController2 = _interopRequireDefault(_BufferController);
 
-var _modelsURIQueryAndFragmentModel = __webpack_require__(51);
+var _modelsURIQueryAndFragmentModel = __webpack_require__(52);
 
 var _modelsURIQueryAndFragmentModel2 = _interopRequireDefault(_modelsURIQueryAndFragmentModel);
 
-var _streamingModelsMediaPlayerModel = __webpack_require__(16);
+var _streamingModelsMediaPlayerModel = __webpack_require__(17);
 
 var _streamingModelsMediaPlayerModel2 = _interopRequireDefault(_streamingModelsMediaPlayerModel);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -20143,7 +20253,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20185,27 +20295,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
-var _utilsDOMStorage = __webpack_require__(59);
+var _utilsDOMStorage = __webpack_require__(60);
 
 var _utilsDOMStorage2 = _interopRequireDefault(_utilsDOMStorage);
 
@@ -20666,7 +20776,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20708,23 +20818,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _TextSourceBuffer = __webpack_require__(288);
+var _TextSourceBuffer = __webpack_require__(289);
 
 var _TextSourceBuffer2 = _interopRequireDefault(_TextSourceBuffer);
 
-var _TextTracks = __webpack_require__(57);
+var _TextTracks = __webpack_require__(58);
 
 var _TextTracks2 = _interopRequireDefault(_TextTracks);
 
-var _utilsVTTParser = __webpack_require__(295);
+var _utilsVTTParser = __webpack_require__(296);
 
 var _utilsVTTParser2 = _interopRequireDefault(_utilsVTTParser);
 
-var _utilsTTMLParser = __webpack_require__(294);
+var _utilsTTMLParser = __webpack_require__(295);
 
 var _utilsTTMLParser2 = _interopRequireDefault(_utilsTTMLParser);
 
@@ -20884,7 +20994,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20967,7 +21077,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21015,7 +21125,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _coreEventsEventsBase = __webpack_require__(35);
+var _coreEventsEventsBase = __webpack_require__(36);
 
 var _coreEventsEventsBase2 = _interopRequireDefault(_coreEventsEventsBase);
 
@@ -21240,7 +21350,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21284,17 +21394,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _utilsErrorHandlerJs = __webpack_require__(21);
+var _utilsErrorHandlerJs = __webpack_require__(22);
 
 var _utilsErrorHandlerJs2 = _interopRequireDefault(_utilsErrorHandlerJs);
 
@@ -21540,7 +21650,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21583,7 +21693,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -21784,7 +21894,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21831,7 +21941,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _externalsBase64 = __webpack_require__(44);
+var _externalsBase64 = __webpack_require__(45);
 
 var _externalsBase642 = _interopRequireDefault(_externalsBase64);
 
@@ -22028,7 +22138,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22071,7 +22181,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -22301,7 +22411,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22379,7 +22489,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22457,7 +22567,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22506,7 +22616,7 @@ exports.decideSegmentListRangeForTemplate = decideSegmentListRangeForTemplate;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voSegment = __webpack_require__(49);
+var _voSegment = __webpack_require__(50);
 
 var _voSegment2 = _interopRequireDefault(_voSegment);
 
@@ -22768,7 +22878,7 @@ function decideSegmentListRangeForTemplate(timelineConverter, isDynamic, represe
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22810,23 +22920,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -23201,7 +23311,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23249,7 +23359,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _coreEventsEventsBase = __webpack_require__(35);
+var _coreEventsEventsBase = __webpack_require__(36);
 
 var _coreEventsEventsBase2 = _interopRequireDefault(_coreEventsEventsBase);
 
@@ -23275,7 +23385,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23318,23 +23428,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voFragmentRequest = __webpack_require__(29);
+var _voFragmentRequest = __webpack_require__(30);
 
 var _voFragmentRequest2 = _interopRequireDefault(_voFragmentRequest);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -23566,94 +23676,6 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/**
- * The copyright in this software is being made available under the BSD License,
- * included below. This software may be subject to other third party and contributor
- * rights, including patent rights, and no such rights are granted under this license.
- *
- * Copyright (c) 2013, Dash Industry Forum.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *  * Redistributions of source code must retain the above copyright notice, this
- *  list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright notice,
- *  this list of conditions and the following disclaimer in the documentation and/or
- *  other materials provided with the distribution.
- *  * Neither the name of Dash Industry Forum nor the names of its
- *  contributors may be used to endorse or promote products derived from this software
- *  without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY
- *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- *  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- *  POSSIBILITY OF SUCH DAMAGE.
- */
-
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _coreEventBus = __webpack_require__(14);
-
-var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
-
-var _coreEventsEvents = __webpack_require__(13);
-
-var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
-
-var _coreFactoryMaker = __webpack_require__(12);
-
-var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
-
-function ManifestModel() {
-
-    var context = this.context;
-    var eventBus = (0, _coreEventBus2['default'])(context).getInstance();
-
-    var instance = undefined,
-        manifest = undefined;
-
-    function getValue() {
-        return manifest;
-    }
-
-    function setValue(value) {
-        manifest = value;
-        if (value) {
-            eventBus.trigger(_coreEventsEvents2['default'].MANIFEST_LOADED, { data: value });
-        }
-    }
-
-    instance = {
-        getValue: getValue,
-        setValue: setValue
-    };
-
-    return instance;
-}
-
-ManifestModel.__dashjs_factory_name = 'ManifestModel';
-exports['default'] = _coreFactoryMaker2['default'].getSingletonFactory(ManifestModel);
-module.exports = exports['default'];
-//# sourceMappingURL=ManifestModel.js.map
-
-
-/***/ }),
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23696,39 +23718,127 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _CommonEncryption = __webpack_require__(33);
+var _coreEventBus = __webpack_require__(15);
+
+var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
+
+var _coreEventsEvents = __webpack_require__(14);
+
+var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
+
+var _coreFactoryMaker = __webpack_require__(13);
+
+var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
+
+function ManifestModel() {
+
+    var context = this.context;
+    var eventBus = (0, _coreEventBus2['default'])(context).getInstance();
+
+    var instance = undefined,
+        manifest = undefined;
+
+    function getValue() {
+        return manifest;
+    }
+
+    function setValue(value) {
+        manifest = value;
+        if (value) {
+            eventBus.trigger(_coreEventsEvents2['default'].MANIFEST_LOADED, { data: value });
+        }
+    }
+
+    instance = {
+        getValue: getValue,
+        setValue: setValue
+    };
+
+    return instance;
+}
+
+ManifestModel.__dashjs_factory_name = 'ManifestModel';
+exports['default'] = _coreFactoryMaker2['default'].getSingletonFactory(ManifestModel);
+module.exports = exports['default'];
+//# sourceMappingURL=ManifestModel.js.map
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * The copyright in this software is being made available under the BSD License,
+ * included below. This software may be subject to other third party and contributor
+ * rights, including patent rights, and no such rights are granted under this license.
+ *
+ * Copyright (c) 2013, Dash Industry Forum.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *  * Redistributions of source code must retain the above copyright notice, this
+ *  list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  * Neither the name of Dash Industry Forum nor the names of its
+ *  contributors may be used to endorse or promote products derived from this software
+ *  without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ *  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _CommonEncryption = __webpack_require__(34);
 
 var _CommonEncryption2 = _interopRequireDefault(_CommonEncryption);
 
-var _drmKeySystemClearKey = __webpack_require__(262);
+var _drmKeySystemClearKey = __webpack_require__(263);
 
 var _drmKeySystemClearKey2 = _interopRequireDefault(_drmKeySystemClearKey);
 
-var _drmKeySystemWidevine = __webpack_require__(264);
+var _drmKeySystemWidevine = __webpack_require__(265);
 
 var _drmKeySystemWidevine2 = _interopRequireDefault(_drmKeySystemWidevine);
 
-var _drmKeySystemPlayReady = __webpack_require__(263);
+var _drmKeySystemPlayReady = __webpack_require__(264);
 
 var _drmKeySystemPlayReady2 = _interopRequireDefault(_drmKeySystemPlayReady);
 
-var _serversDRMToday = __webpack_require__(269);
+var _serversDRMToday = __webpack_require__(270);
 
 var _serversDRMToday2 = _interopRequireDefault(_serversDRMToday);
 
-var _serversPlayReady = __webpack_require__(270);
+var _serversPlayReady = __webpack_require__(271);
 
 var _serversPlayReady2 = _interopRequireDefault(_serversPlayReady);
 
-var _serversWidevine = __webpack_require__(271);
+var _serversWidevine = __webpack_require__(272);
 
 var _serversWidevine2 = _interopRequireDefault(_serversWidevine);
 
-var _serversClearKey = __webpack_require__(268);
+var _serversClearKey = __webpack_require__(269);
 
 var _serversClearKey2 = _interopRequireDefault(_serversClearKey);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -24006,7 +24116,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24049,7 +24159,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -24080,7 +24190,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24250,7 +24360,7 @@ if (true) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24797,7 +24907,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24842,35 +24952,35 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _streamingVoTrackInfo = __webpack_require__(307);
+var _streamingVoTrackInfo = __webpack_require__(308);
 
 var _streamingVoTrackInfo2 = _interopRequireDefault(_streamingVoTrackInfo);
 
-var _streamingVoMediaInfo = __webpack_require__(303);
+var _streamingVoMediaInfo = __webpack_require__(304);
 
 var _streamingVoMediaInfo2 = _interopRequireDefault(_streamingVoMediaInfo);
 
-var _streamingVoStreamInfo = __webpack_require__(305);
+var _streamingVoStreamInfo = __webpack_require__(306);
 
 var _streamingVoStreamInfo2 = _interopRequireDefault(_streamingVoStreamInfo);
 
-var _streamingVoManifestInfo = __webpack_require__(302);
+var _streamingVoManifestInfo = __webpack_require__(303);
 
 var _streamingVoManifestInfo2 = _interopRequireDefault(_streamingVoManifestInfo);
 
-var _voEvent = __webpack_require__(68);
+var _voEvent = __webpack_require__(69);
 
 var _voEvent2 = _interopRequireDefault(_voEvent);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _externalsCea608Parser = __webpack_require__(63);
+var _externalsCea608Parser = __webpack_require__(64);
 
 var _externalsCea608Parser2 = _interopRequireDefault(_externalsCea608Parser);
 
-var _constantsDashMetricsList = __webpack_require__(65);
+var _constantsDashMetricsList = __webpack_require__(66);
 
 var METRIC_LIST = _interopRequireWildcard(_constantsDashMetricsList);
 
@@ -25255,7 +25365,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25297,15 +25407,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -25507,7 +25617,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25603,7 +25713,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25684,7 +25794,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25726,49 +25836,49 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _PlaybackController = __webpack_require__(26);
+var _PlaybackController = __webpack_require__(27);
 
 var _PlaybackController2 = _interopRequireDefault(_PlaybackController);
 
-var _Stream = __webpack_require__(229);
+var _Stream = __webpack_require__(230);
 
 var _Stream2 = _interopRequireDefault(_Stream);
 
-var _ManifestUpdater = __webpack_require__(227);
+var _ManifestUpdater = __webpack_require__(228);
 
 var _ManifestUpdater2 = _interopRequireDefault(_ManifestUpdater);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _modelsURIQueryAndFragmentModel = __webpack_require__(51);
+var _modelsURIQueryAndFragmentModel = __webpack_require__(52);
 
 var _modelsURIQueryAndFragmentModel2 = _interopRequireDefault(_modelsURIQueryAndFragmentModel);
 
-var _modelsVideoModel = __webpack_require__(32);
+var _modelsVideoModel = __webpack_require__(33);
 
 var _modelsVideoModel2 = _interopRequireDefault(_modelsVideoModel);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voMetricsPlayList = __webpack_require__(80);
+var _voMetricsPlayList = __webpack_require__(81);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _utilsInitCache = __webpack_require__(60);
+var _utilsInitCache = __webpack_require__(61);
 
 var _utilsInitCache2 = _interopRequireDefault(_utilsInitCache);
 
@@ -26475,7 +26585,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26518,11 +26628,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voURIFragmentData = __webpack_require__(308);
+var _voURIFragmentData = __webpack_require__(309);
 
 var _voURIFragmentData2 = _interopRequireDefault(_voURIFragmentData);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -26618,7 +26728,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26685,7 +26795,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26756,7 +26866,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26826,7 +26936,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26911,7 +27021,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26976,7 +27086,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27018,19 +27128,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -27651,7 +27761,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27694,15 +27804,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _IsoFile = __webpack_require__(292);
+var _IsoFile = __webpack_require__(293);
 
 var _IsoFile2 = _interopRequireDefault(_IsoFile);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _codemIsoboxer = __webpack_require__(62);
+var _codemIsoboxer = __webpack_require__(63);
 
 var _codemIsoboxer2 = _interopRequireDefault(_codemIsoboxer);
 
@@ -27744,7 +27854,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27786,15 +27896,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -27966,7 +28076,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28013,7 +28123,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -28057,7 +28167,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28099,7 +28209,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -28150,7 +28260,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*! codem-isoboxer v0.3.4 https://github.com/madebyhiro/codem-isoboxer/blob/master/LICENSE.txt */
@@ -29311,7 +29421,7 @@ ISOBox.prototype._boxProcessors['vtte'] = function() {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30570,7 +30680,7 @@ ISOBox.prototype._boxProcessors['vtte'] = function() {
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30589,7 +30699,7 @@ function getVersionString() {
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30661,7 +30771,7 @@ exports.DVB_ERRORS = DVB_ERRORS;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30710,7 +30820,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _CommonProperty = __webpack_require__(209);
+var _CommonProperty = __webpack_require__(210);
 
 var _CommonProperty2 = _interopRequireDefault(_CommonProperty);
 
@@ -30769,7 +30879,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30845,7 +30955,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30908,7 +31018,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30968,7 +31078,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31010,131 +31120,131 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _dashVoUTCTiming = __webpack_require__(69);
+var _dashVoUTCTiming = __webpack_require__(70);
 
 var _dashVoUTCTiming2 = _interopRequireDefault(_dashVoUTCTiming);
 
-var _controllersPlaybackController = __webpack_require__(26);
+var _controllersPlaybackController = __webpack_require__(27);
 
 var _controllersPlaybackController2 = _interopRequireDefault(_controllersPlaybackController);
 
-var _controllersStreamController = __webpack_require__(50);
+var _controllersStreamController = __webpack_require__(51);
 
 var _controllersStreamController2 = _interopRequireDefault(_controllersStreamController);
 
-var _controllersMediaController = __webpack_require__(27);
+var _controllersMediaController = __webpack_require__(28);
 
 var _controllersMediaController2 = _interopRequireDefault(_controllersMediaController);
 
-var _ManifestLoader = __webpack_require__(226);
+var _ManifestLoader = __webpack_require__(227);
 
 var _ManifestLoader2 = _interopRequireDefault(_ManifestLoader);
 
-var _utilsLiveEdgeFinder = __webpack_require__(61);
+var _utilsLiveEdgeFinder = __webpack_require__(62);
 
 var _utilsLiveEdgeFinder2 = _interopRequireDefault(_utilsLiveEdgeFinder);
 
-var _utilsErrorHandler = __webpack_require__(21);
+var _utilsErrorHandler = __webpack_require__(22);
 
 var _utilsErrorHandler2 = _interopRequireDefault(_utilsErrorHandler);
 
-var _utilsCapabilities = __webpack_require__(290);
+var _utilsCapabilities = __webpack_require__(291);
 
 var _utilsCapabilities2 = _interopRequireDefault(_utilsCapabilities);
 
-var _textTextTracks = __webpack_require__(57);
+var _textTextTracks = __webpack_require__(58);
 
 var _textTextTracks2 = _interopRequireDefault(_textTextTracks);
 
-var _controllersSourceBufferController = __webpack_require__(38);
+var _controllersSourceBufferController = __webpack_require__(39);
 
 var _controllersSourceBufferController2 = _interopRequireDefault(_controllersSourceBufferController);
 
-var _utilsRequestModifier = __webpack_require__(43);
+var _utilsRequestModifier = __webpack_require__(44);
 
 var _utilsRequestModifier2 = _interopRequireDefault(_utilsRequestModifier);
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
-var _modelsURIQueryAndFragmentModel = __webpack_require__(51);
+var _modelsURIQueryAndFragmentModel = __webpack_require__(52);
 
 var _modelsURIQueryAndFragmentModel2 = _interopRequireDefault(_modelsURIQueryAndFragmentModel);
 
-var _modelsManifestModel = __webpack_require__(41);
+var _modelsManifestModel = __webpack_require__(42);
 
 var _modelsManifestModel2 = _interopRequireDefault(_modelsManifestModel);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _controllersAbrController = __webpack_require__(24);
+var _controllersAbrController = __webpack_require__(25);
 
 var _controllersAbrController2 = _interopRequireDefault(_controllersAbrController);
 
-var _controllersTimeSyncController = __webpack_require__(238);
+var _controllersTimeSyncController = __webpack_require__(239);
 
 var _controllersTimeSyncController2 = _interopRequireDefault(_controllersTimeSyncController);
 
-var _rulesAbrABRRulesCollection = __webpack_require__(276);
+var _rulesAbrABRRulesCollection = __webpack_require__(277);
 
 var _rulesAbrABRRulesCollection2 = _interopRequireDefault(_rulesAbrABRRulesCollection);
 
-var _modelsVideoModel = __webpack_require__(32);
+var _modelsVideoModel = __webpack_require__(33);
 
 var _modelsVideoModel2 = _interopRequireDefault(_modelsVideoModel);
 
-var _controllersMediaSourceController = __webpack_require__(236);
+var _controllersMediaSourceController = __webpack_require__(237);
 
 var _controllersMediaSourceController2 = _interopRequireDefault(_controllersMediaSourceController);
 
-var _controllersBaseURLController = __webpack_require__(232);
+var _controllersBaseURLController = __webpack_require__(233);
 
 var _controllersBaseURLController2 = _interopRequireDefault(_controllersBaseURLController);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _MediaPlayerEvents = __webpack_require__(30);
+var _MediaPlayerEvents = __webpack_require__(31);
 
 var _MediaPlayerEvents2 = _interopRequireDefault(_MediaPlayerEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreVersion = __webpack_require__(64);
+var _coreVersion = __webpack_require__(65);
 
 //Dash
 
-var _dashDashAdapter = __webpack_require__(46);
+var _dashDashAdapter = __webpack_require__(47);
 
 var _dashDashAdapter2 = _interopRequireDefault(_dashDashAdapter);
 
-var _dashModelsDashManifestModel = __webpack_require__(23);
+var _dashModelsDashManifestModel = __webpack_require__(24);
 
 var _dashModelsDashManifestModel2 = _interopRequireDefault(_dashModelsDashManifestModel);
 
-var _dashDashMetrics = __webpack_require__(22);
+var _dashDashMetrics = __webpack_require__(23);
 
 var _dashDashMetrics2 = _interopRequireDefault(_dashDashMetrics);
 
-var _dashUtilsTimelineConverter = __webpack_require__(47);
+var _dashUtilsTimelineConverter = __webpack_require__(48);
 
 var _dashUtilsTimelineConverter2 = _interopRequireDefault(_dashUtilsTimelineConverter);
 
@@ -33258,7 +33368,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33301,23 +33411,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _handlersBufferLevelHandler = __webpack_require__(246);
+var _handlersBufferLevelHandler = __webpack_require__(247);
 
 var _handlersBufferLevelHandler2 = _interopRequireDefault(_handlersBufferLevelHandler);
 
-var _handlersDVBErrorsHandler = __webpack_require__(247);
+var _handlersDVBErrorsHandler = __webpack_require__(248);
 
 var _handlersDVBErrorsHandler2 = _interopRequireDefault(_handlersDVBErrorsHandler);
 
-var _handlersHttpListHandler = __webpack_require__(249);
+var _handlersHttpListHandler = __webpack_require__(250);
 
 var _handlersHttpListHandler2 = _interopRequireDefault(_handlersHttpListHandler);
 
-var _handlersGenericMetricHandler = __webpack_require__(248);
+var _handlersGenericMetricHandler = __webpack_require__(249);
 
 var _handlersGenericMetricHandler2 = _interopRequireDefault(_handlersGenericMetricHandler);
 
@@ -33386,7 +33496,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33429,11 +33539,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _reportersDVBReporting = __webpack_require__(250);
+var _reportersDVBReporting = __webpack_require__(251);
 
 var _reportersDVBReporting2 = _interopRequireDefault(_reportersDVBReporting);
 
@@ -33487,7 +33597,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33530,7 +33640,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -33579,7 +33689,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33621,31 +33731,31 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersProtectionController = __webpack_require__(261);
+var _controllersProtectionController = __webpack_require__(262);
 
 var _controllersProtectionController2 = _interopRequireDefault(_controllersProtectionController);
 
-var _controllersProtectionKeyController = __webpack_require__(42);
+var _controllersProtectionKeyController = __webpack_require__(43);
 
 var _controllersProtectionKeyController2 = _interopRequireDefault(_controllersProtectionKeyController);
 
-var _ProtectionEvents = __webpack_require__(260);
+var _ProtectionEvents = __webpack_require__(261);
 
 var _ProtectionEvents2 = _interopRequireDefault(_ProtectionEvents);
 
-var _modelsProtectionModel_21Jan2015 = __webpack_require__(266);
+var _modelsProtectionModel_21Jan2015 = __webpack_require__(267);
 
 var _modelsProtectionModel_21Jan20152 = _interopRequireDefault(_modelsProtectionModel_21Jan2015);
 
-var _modelsProtectionModel_3Feb2014 = __webpack_require__(267);
+var _modelsProtectionModel_3Feb2014 = __webpack_require__(268);
 
 var _modelsProtectionModel_3Feb20142 = _interopRequireDefault(_modelsProtectionModel_3Feb2014);
 
-var _modelsProtectionModel_01b = __webpack_require__(265);
+var _modelsProtectionModel_01b = __webpack_require__(266);
 
 var _modelsProtectionModel_01b2 = _interopRequireDefault(_modelsProtectionModel_01b);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -33805,7 +33915,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33917,7 +34027,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33983,7 +34093,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34028,33 +34138,33 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _SwitchRequest = __webpack_require__(19);
+var _SwitchRequest = __webpack_require__(20);
 
 var _SwitchRequest2 = _interopRequireDefault(_SwitchRequest);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _dashDashAdapter = __webpack_require__(46);
+var _dashDashAdapter = __webpack_require__(47);
 
 var _dashDashAdapter2 = _interopRequireDefault(_dashDashAdapter);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -34574,7 +34684,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34616,7 +34726,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -34739,7 +34849,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34791,7 +34901,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _FragmentRequest2 = __webpack_require__(29);
+var _FragmentRequest2 = __webpack_require__(30);
 
 var _FragmentRequest3 = _interopRequireDefault(_FragmentRequest2);
 
@@ -34817,7 +34927,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34983,7 +35093,7 @@ exports.PlayListTrace = PlayListTrace;
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34991,7 +35101,7 @@ exports.PlayListTrace = PlayListTrace;
 //! author : Werner Mollentze : https://github.com/wernerm
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35061,7 +35171,7 @@ return af;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35069,7 +35179,7 @@ return af;
 //! author : Noureddine LOUAHEDJ : https://github.com/noureddineme
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35125,7 +35235,7 @@ return arDz;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35133,7 +35243,7 @@ return arDz;
 //! author : Nusret Parlak: https://github.com/nusretparlak
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35189,7 +35299,7 @@ return arKw;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35197,7 +35307,7 @@ return arKw;
 //! author : Ali Hmer: https://github.com/kikoanis
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35320,7 +35430,7 @@ return arLy;
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35329,7 +35439,7 @@ return arLy;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35385,7 +35495,7 @@ return arMa;
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35393,7 +35503,7 @@ return arMa;
 //! author : Suhail Alkowaileet : https://github.com/xsoh
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35495,7 +35605,7 @@ return arSa;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35503,7 +35613,7 @@ return arSa;
 //! author : Nader Toukabri : https://github.com/naderio
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35559,7 +35669,7 @@ return arTn;
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35569,7 +35679,7 @@ return arTn;
 //! author : forabi https://github.com/forabi
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35706,7 +35816,7 @@ return ar;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35714,7 +35824,7 @@ return ar;
 //! author : topchiyev : https://github.com/topchiyev
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35816,7 +35926,7 @@ return az;
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35826,7 +35936,7 @@ return az;
 //! Author : Menelion Elensúle : https://github.com/Oire
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -35955,7 +36065,7 @@ return be;
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35963,7 +36073,7 @@ return be;
 //! author : Krasen Borisov : https://github.com/kraz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36050,7 +36160,7 @@ return bg;
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36058,7 +36168,7 @@ return bg;
 //! author : Kaushik Gandhi : https://github.com/kaushikgandhi
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36174,7 +36284,7 @@ return bn;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36182,7 +36292,7 @@ return bn;
 //! author : Thupten N. Chakrishar : https://github.com/vajradog
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36298,7 +36408,7 @@ return bo;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36306,7 +36416,7 @@ return bo;
 //! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36411,7 +36521,7 @@ return br;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36420,7 +36530,7 @@ return br;
 //! based on (hr) translation by Bojan Marković
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36559,7 +36669,7 @@ return bs;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36567,7 +36677,7 @@ return bs;
 //! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36652,7 +36762,7 @@ return ca;
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36660,7 +36770,7 @@ return ca;
 //! author : petrbela : https://github.com/petrbela
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36829,7 +36939,7 @@ return cs;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36837,7 +36947,7 @@ return cs;
 //! author : Anatoly Mironov : https://github.com/mirontoli
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36897,7 +37007,7 @@ return cv;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36906,7 +37016,7 @@ return cv;
 //! author : https://github.com/ryangreaves
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -36983,7 +37093,7 @@ return cy;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36991,7 +37101,7 @@ return cy;
 //! author : Ulrik Nielsen : https://github.com/mrbase
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37048,7 +37158,7 @@ return da;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37059,7 +37169,7 @@ return da;
 //! author : Mikolaj Dadela : https://github.com/mik01aj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37132,7 +37242,7 @@ return deAt;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37140,7 +37250,7 @@ return deAt;
 //! author : sschueller : https://github.com/sschueller
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37215,7 +37325,7 @@ return deCh;
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37225,7 +37335,7 @@ return deCh;
 //! author : Mikolaj Dadela : https://github.com/mik01aj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37298,7 +37408,7 @@ return de;
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37306,7 +37416,7 @@ return de;
 //! author : Jawish Hameed : https://github.com/jawish
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37403,7 +37513,7 @@ return dv;
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37411,7 +37521,7 @@ return dv;
 //! author : Aggelos Karalias : https://github.com/mehiel
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37508,7 +37618,7 @@ return el;
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37516,7 +37626,7 @@ return el;
 //! author : Jared Morse : https://github.com/jarcoal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37580,7 +37690,7 @@ return enAu;
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37588,7 +37698,7 @@ return enAu;
 //! author : Jonathan Abourbih : https://github.com/jonbca
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37648,7 +37758,7 @@ return enCa;
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37656,7 +37766,7 @@ return enCa;
 //! author : Chris Gedrim : https://github.com/chrisgedrim
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37720,7 +37830,7 @@ return enGb;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37728,7 +37838,7 @@ return enGb;
 //! author : Chris Cartlidge : https://github.com/chriscartlidge
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37792,7 +37902,7 @@ return enIe;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37800,7 +37910,7 @@ return enIe;
 //! author : Luke McGregor : https://github.com/lukemcgregor
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37864,7 +37974,7 @@ return enNz;
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37874,7 +37984,7 @@ return enNz;
 //! comment : miestasmia corrected the translation by colindean
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -37942,14 +38052,14 @@ return eo;
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 //! locale : Spanish (Dominican Republic) [es-do]
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38029,7 +38139,7 @@ return esDo;
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38037,7 +38147,7 @@ return esDo;
 //! author : Julio Napurí : https://github.com/julionc
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38117,7 +38227,7 @@ return es;
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38126,7 +38236,7 @@ return es;
 //! improvements : Illimar Tambek : https://github.com/ragulka
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38202,7 +38312,7 @@ return et;
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38210,7 +38320,7 @@ return et;
 //! author : Eneko Illarramendi : https://github.com/eillarra
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38273,7 +38383,7 @@ return eu;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38281,7 +38391,7 @@ return eu;
 //! author : Ebrahim Byagowi : https://github.com/ebraminio
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38385,7 +38495,7 @@ return fa;
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38393,7 +38503,7 @@ return fa;
 //! author : Tarmo Aidantausta : https://github.com/bleadof
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38497,7 +38607,7 @@ return fi;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38505,7 +38615,7 @@ return fi;
 //! author : Ragnar Johannesen : https://github.com/ragnar123
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38562,7 +38672,7 @@ return fo;
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38570,7 +38680,7 @@ return fo;
 //! author : Jonathan Abourbih : https://github.com/jonbca
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38641,7 +38751,7 @@ return frCa;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38649,7 +38759,7 @@ return frCa;
 //! author : Gaspard Bucher : https://github.com/gaspard
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38724,7 +38834,7 @@ return frCh;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38732,7 +38842,7 @@ return frCh;
 //! author : John Fischer : https://github.com/jfroffice
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38812,7 +38922,7 @@ return fr;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38820,7 +38930,7 @@ return fr;
 //! author : Robin van der Vliet : https://github.com/robin0van0der0v
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38892,7 +39002,7 @@ return fy;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38900,7 +39010,7 @@ return fy;
 //! author : Jon Ashdown : https://github.com/jonashdown
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -38973,7 +39083,7 @@ return gd;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38981,7 +39091,7 @@ return gd;
 //! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39055,7 +39165,7 @@ return gl;
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39063,7 +39173,7 @@ return gl;
 //! author : The Discoverer : https://github.com/WikiDiscoverer
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39182,7 +39292,7 @@ return gomLatn;
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39192,7 +39302,7 @@ return gomLatn;
 //! author : Tal Ater : https://github.com/TalAter
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39286,7 +39396,7 @@ return he;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39294,7 +39404,7 @@ return he;
 //! author : Mayank Singhal : https://github.com/mayanksinghal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39415,7 +39525,7 @@ return hi;
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39423,7 +39533,7 @@ return hi;
 //! author : Bojan Marković : https://github.com/bmarkovic
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39565,7 +39675,7 @@ return hr;
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39573,7 +39683,7 @@ return hr;
 //! author : Adam Brunner : https://github.com/adambrunner
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39679,7 +39789,7 @@ return hu;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39687,7 +39797,7 @@ return hu;
 //! author : Armendarabyan : https://github.com/armendarabyan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39779,7 +39889,7 @@ return hyAm;
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39788,7 +39898,7 @@ return hyAm;
 //! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39867,7 +39977,7 @@ return id;
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -39875,7 +39985,7 @@ return id;
 //! author : Hinrik Örn Sigurðsson : https://github.com/hinrik
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -39999,7 +40109,7 @@ return is;
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40008,7 +40118,7 @@ return is;
 //! author: Mattia Larentis: https://github.com/nostalgiaz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40074,7 +40184,7 @@ return it;
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40082,7 +40192,7 @@ return it;
 //! author : LI Long : https://github.com/baryon
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40159,7 +40269,7 @@ return ja;
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40168,7 +40278,7 @@ return ja;
 //! reference: http://jv.wikipedia.org/wiki/Basa_Jawa
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40247,7 +40357,7 @@ return jv;
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40255,7 +40365,7 @@ return jv;
 //! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40341,7 +40451,7 @@ return ka;
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40349,7 +40459,7 @@ return ka;
 //! authors : Nurlan Rakhimzhanov : https://github.com/nurlan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40433,7 +40543,7 @@ return kk;
 
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40441,7 +40551,7 @@ return kk;
 //! author : Kruy Vanna : https://github.com/kruyvanna
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40496,7 +40606,7 @@ return km;
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40504,7 +40614,7 @@ return km;
 //! author : Rajeev Naik : https://github.com/rajeevnaikte
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40627,7 +40737,7 @@ return kn;
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40636,7 +40746,7 @@ return kn;
 //! author : Jeeeyul Lee <jeeeyul@gmail.com>
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40701,7 +40811,7 @@ return ko;
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40709,7 +40819,7 @@ return ko;
 //! author : Chyngyz Arystan uulu : https://github.com/chyngyz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40794,7 +40904,7 @@ return ky;
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40803,7 +40913,7 @@ return ky;
 //! author : David Raison : https://github.com/kwisatz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -40936,7 +41046,7 @@ return lb;
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -40944,7 +41054,7 @@ return lb;
 //! author : Ryan Hart : https://github.com/ryanhart2
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41011,7 +41121,7 @@ return lo;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41019,7 +41129,7 @@ return lo;
 //! author : Mindaugas Mozūras : https://github.com/mmozuras
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41133,7 +41243,7 @@ return lt;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41142,7 +41252,7 @@ return lt;
 //! author : Jānis Elmeris : https://github.com/JanisE
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41235,7 +41345,7 @@ return lv;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41243,7 +41353,7 @@ return lv;
 //! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41351,7 +41461,7 @@ return me;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41359,7 +41469,7 @@ return me;
 //! author : John Corrigan <robbiecloset@gmail.com> : https://github.com/johnideal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41420,7 +41530,7 @@ return mi;
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41428,7 +41538,7 @@ return mi;
 //! author : Borislav Mickov : https://github.com/B0k0
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41515,7 +41625,7 @@ return mk;
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41523,7 +41633,7 @@ return mk;
 //! author : Floyd Pink : https://github.com/floydpink
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41601,7 +41711,7 @@ return ml;
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41610,7 +41720,7 @@ return ml;
 //! author : Vivek Athalye : https://github.com/vnathalye
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41765,7 +41875,7 @@ return mr;
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41774,7 +41884,7 @@ return mr;
 //! author : Weldan Jamili : https://github.com/weldan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41853,7 +41963,7 @@ return msMy;
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41861,7 +41971,7 @@ return msMy;
 //! author : Weldan Jamili : https://github.com/weldan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -41940,7 +42050,7 @@ return ms;
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -41950,7 +42060,7 @@ return ms;
 //! author : Tin Aung Lin : https://github.com/thanyawzinmin
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42041,7 +42151,7 @@ return my;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42050,7 +42160,7 @@ return my;
 //!           Sigurd Gartmann : https://github.com/sigurdga
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42109,7 +42219,7 @@ return nb;
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42117,7 +42227,7 @@ return nb;
 //! author : suvash : https://github.com/suvash
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42237,7 +42347,7 @@ return ne;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42246,7 +42356,7 @@ return ne;
 //! author : Jacob Middag : https://github.com/middagj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42330,7 +42440,7 @@ return nlBe;
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42339,7 +42449,7 @@ return nlBe;
 //! author : Jacob Middag : https://github.com/middagj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42423,7 +42533,7 @@ return nl;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42431,7 +42541,7 @@ return nl;
 //! author : https://github.com/mechuwind
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42488,7 +42598,7 @@ return nn;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42496,7 +42606,7 @@ return nn;
 //! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42617,7 +42727,7 @@ return paIn;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42625,7 +42735,7 @@ return paIn;
 //! author : Rafal Hirsz : https://github.com/evoL
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42729,7 +42839,7 @@ return pl;
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42737,7 +42847,7 @@ return pl;
 //! author : Caio Ribeiro Pereira : https://github.com/caio-ribeiro-pereira
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42795,7 +42905,7 @@ return ptBr;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42803,7 +42913,7 @@ return ptBr;
 //! author : Jefferson : https://github.com/jalex79
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42865,7 +42975,7 @@ return pt;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42874,7 +42984,7 @@ return pt;
 //! author : Valentin Agachi : https://github.com/avaly
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -42945,7 +43055,7 @@ return ro;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -42955,7 +43065,7 @@ return ro;
 //! author : Коренберг Марк : https://github.com/socketpair
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43133,7 +43243,7 @@ return ru;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43141,7 +43251,7 @@ return ru;
 //! author : Narain Sagar : https://github.com/narainsagar
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43236,7 +43346,7 @@ return sd;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43244,7 +43354,7 @@ return sd;
 //! authors : Bård Rolstad Henriksen : https://github.com/karamell
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43302,7 +43412,7 @@ return se;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43310,7 +43420,7 @@ return se;
 //! author : Sampath Sitinamaluwa : https://github.com/sampathsris
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43378,7 +43488,7 @@ return si;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43387,7 +43497,7 @@ return si;
 //! based on work of petrbela : https://github.com/petrbela
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43533,7 +43643,7 @@ return sk;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43541,7 +43651,7 @@ return sk;
 //! author : Robert Sedovšek : https://github.com/sedovsek
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43700,7 +43810,7 @@ return sl;
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43710,7 +43820,7 @@ return sl;
 //! author : Oerd Cukalla : https://github.com/oerd
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43775,7 +43885,7 @@ return sq;
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43783,7 +43893,7 @@ return sq;
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -43890,7 +44000,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -43898,7 +44008,7 @@ return srCyrl;
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44005,7 +44115,7 @@ return sr;
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44013,7 +44123,7 @@ return sr;
 //! author : Nicolai Davies<mail@nicolai.io> : https://github.com/nicolaidavies
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44099,7 +44209,7 @@ return ss;
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44107,7 +44217,7 @@ return ss;
 //! author : Jens Alm : https://github.com/ulmus
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44173,7 +44283,7 @@ return sv;
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44181,7 +44291,7 @@ return sv;
 //! author : Fahad Kassim : https://github.com/fadsel
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44237,7 +44347,7 @@ return sw;
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44245,7 +44355,7 @@ return sw;
 //! author : Arjunkumar Krishnamoorthy : https://github.com/tk120404
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44372,7 +44482,7 @@ return ta;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44380,7 +44490,7 @@ return ta;
 //! author : Krishna Chaitanya Thota : https://github.com/kcthota
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44466,7 +44576,7 @@ return te;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44475,7 +44585,7 @@ return te;
 //! author : Onorio De J. Afonso : https://github.com/marobo
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44539,7 +44649,7 @@ return tet;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44547,7 +44657,7 @@ return tet;
 //! author : Kridsada Thanabulpong : https://github.com/sirn
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44611,7 +44721,7 @@ return th;
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44619,7 +44729,7 @@ return th;
 //! author : Dan Hagman : https://github.com/hagmandan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44678,7 +44788,7 @@ return tlPh;
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44686,7 +44796,7 @@ return tlPh;
 //! author : Dominika Kruk : https://github.com/amaranthrose
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44803,7 +44913,7 @@ return tlh;
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44812,7 +44922,7 @@ return tlh;
 //!           Burak Yiğit Kaya: https://github.com/BYK
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44898,7 +45008,7 @@ return tr;
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -44907,7 +45017,7 @@ return tr;
 //! author : Iustì Canun
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -44994,7 +45104,7 @@ return tzl;
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45002,7 +45112,7 @@ return tzl;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45057,7 +45167,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45065,7 +45175,7 @@ return tzmLatn;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45120,7 +45230,7 @@ return tzm;
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45129,7 +45239,7 @@ return tzm;
 //! Author : Menelion Elensúle : https://github.com/Oire
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45276,7 +45386,7 @@ return uk;
 
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45285,7 +45395,7 @@ return uk;
 //! author : Zack : https://github.com/ZackVision
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45380,7 +45490,7 @@ return ur;
 
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45388,7 +45498,7 @@ return ur;
 //! author : Rasulbek Mirzayev : github.com/Rasulbeeek
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45443,7 +45553,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45451,7 +45561,7 @@ return uzLatn;
 //! author : Sardor Muminov : https://github.com/muminoff
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45506,7 +45616,7 @@ return uz;
 
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45514,7 +45624,7 @@ return uz;
 //! author : Bang Nguyen : https://github.com/bangnk
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45590,7 +45700,7 @@ return vi;
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45598,7 +45708,7 @@ return vi;
 //! author : Andrew Hood : https://github.com/andrewhood125
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45663,7 +45773,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45671,7 +45781,7 @@ return xPseudo;
 //! author : Atolagbe Abisoye : https://github.com/andela-batolagbe
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45728,7 +45838,7 @@ return yo;
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45737,7 +45847,7 @@ return yo;
 //! author : Zeno Zeng : https://github.com/zenozeng
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45844,7 +45954,7 @@ return zhCn;
 
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45854,7 +45964,7 @@ return zhCn;
 //! author : Konstantin : https://github.com/skfd
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -45954,7 +46064,7 @@ return zhHk;
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -45963,7 +46073,7 @@ return zhHk;
 //! author : Chris Lam : https://github.com/hehachris
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(11)) :
+    true ? factory(__webpack_require__(12)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -46061,105 +46171,6 @@ return zhTw;
 
 })));
 
-
-/***/ }),
-/* 196 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _vue = __webpack_require__(3);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _movieComponentTemplate = __webpack_require__(327);
-
-var _movieComponentTemplate2 = _interopRequireDefault(_movieComponentTemplate);
-
-var _api = __webpack_require__(1);
-
-var _api2 = _interopRequireDefault(_api);
-
-var _dashjs = __webpack_require__(202);
-
-var _vueScrollto = __webpack_require__(325);
-
-var _vueScrollto2 = _interopRequireDefault(_vueScrollto);
-
-var _moment = __webpack_require__(11);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _momentDurationFormat = __webpack_require__(321);
-
-var _momentDurationFormat2 = _interopRequireDefault(_momentDurationFormat);
-
-var _currencyFormatter = __webpack_require__(199);
-
-var _currencyFormatter2 = _interopRequireDefault(_currencyFormatter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var mainConfig = __webpack_require__(0);
-
-_vue2.default.use(_vueScrollto2.default);
-var AppComponent = _vue2.default.extend({
-  template: _movieComponentTemplate2.default,
-  props: ['config', 'info'],
-  data: function data() {
-    return {
-      direction: 'rtl'
-    };
-  },
-
-  computed: {
-    backdropUrl: function backdropUrl() {
-      return this.config.images.base_url + this.config.images.backdrop_sizes[3] + this.info.backdrop_path;
-    },
-    posterUrl: function posterUrl() {
-      return this.config.images.base_url + this.config.images.poster_sizes[3] + this.info.poster_path;
-    },
-    releaseYear: function releaseYear() {
-      return (0, _moment2.default)(this.info.release_date).year();
-    },
-    hoursAndMin: function hoursAndMin() {
-      return _moment2.default.duration(this.info.runtime, "minutes").format("h[h] m[m]");
-    },
-    budgetFormat: function budgetFormat() {
-      return _currencyFormatter2.default.format(this.info.budget, { code: 'USD' });
-    },
-    ratingPercentage: function ratingPercentage() {
-      return this.info.vote_average * 10 + '%';
-    }
-  },
-
-  methods: {
-    initializeVideo: function initializeVideo() {
-      var url = mainConfig.video_url;
-      var player = (0, _dashjs.MediaPlayer)().create();
-      player.initialize(this.$refs.videoElement, url, false);
-      player.attachTTMLRenderingDiv(this.$refs.videoCaption);
-    },
-    changeDirection: function changeDirection() {
-      if (this.direction === 'rtl') {
-        this.direction = 'ltr';
-      } else {
-        this.direction = 'rtl';
-      }
-    }
-  },
-
-  mounted: function mounted() {
-    this.initializeVideo(), window.document.title = 'WatchZ ' + this.info.title, this.changeDirection();
-  }
-});
-
-exports.default = AppComponent;
 
 /***/ }),
 /* 197 */
@@ -46582,6 +46593,613 @@ exports.default = AppComponent;
 
 /***/ }),
 /* 198 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Bowser - a browser detector
+ * https://github.com/ded/bowser
+ * MIT License | (c) Dustin Diaz 2015
+ */
+
+!function (root, name, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (true) __webpack_require__(328)(name, definition)
+  else root[name] = definition()
+}(this, 'bowser', function () {
+  /**
+    * See useragents.js for examples of navigator.userAgent
+    */
+
+  var t = true
+
+  function detect(ua) {
+
+    function getFirstMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[1]) || '';
+    }
+
+    function getSecondMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[2]) || '';
+    }
+
+    var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
+      , likeAndroid = /like android/i.test(ua)
+      , android = !likeAndroid && /android/i.test(ua)
+      , nexusMobile = /nexus\s*[0-6]\s*/i.test(ua)
+      , nexusTablet = !nexusMobile && /nexus\s*[0-9]+/i.test(ua)
+      , chromeos = /CrOS/.test(ua)
+      , silk = /silk/i.test(ua)
+      , sailfish = /sailfish/i.test(ua)
+      , tizen = /tizen/i.test(ua)
+      , webos = /(web|hpw)os/i.test(ua)
+      , windowsphone = /windows phone/i.test(ua)
+      , samsungBrowser = /SamsungBrowser/i.test(ua)
+      , windows = !windowsphone && /windows/i.test(ua)
+      , mac = !iosdevice && !silk && /macintosh/i.test(ua)
+      , linux = !android && !sailfish && !tizen && !webos && /linux/i.test(ua)
+      , edgeVersion = getFirstMatch(/edge\/(\d+(\.\d+)?)/i)
+      , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
+      , tablet = /tablet/i.test(ua)
+      , mobile = !tablet && /[^-]mobi/i.test(ua)
+      , xbox = /xbox/i.test(ua)
+      , result
+
+    if (/opera/i.test(ua)) {
+      //  an old Opera
+      result = {
+        name: 'Opera'
+      , opera: t
+      , version: versionIdentifier || getFirstMatch(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)
+      }
+    } else if (/opr|opios/i.test(ua)) {
+      // a new Opera
+      result = {
+        name: 'Opera'
+        , opera: t
+        , version: getFirstMatch(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/SamsungBrowser/i.test(ua)) {
+      result = {
+        name: 'Samsung Internet for Android'
+        , samsungBrowser: t
+        , version: versionIdentifier || getFirstMatch(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/coast/i.test(ua)) {
+      result = {
+        name: 'Opera Coast'
+        , coast: t
+        , version: versionIdentifier || getFirstMatch(/(?:coast)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/yabrowser/i.test(ua)) {
+      result = {
+        name: 'Yandex Browser'
+      , yandexbrowser: t
+      , version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/ucbrowser/i.test(ua)) {
+      result = {
+          name: 'UC Browser'
+        , ucbrowser: t
+        , version: getFirstMatch(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/mxios/i.test(ua)) {
+      result = {
+        name: 'Maxthon'
+        , maxthon: t
+        , version: getFirstMatch(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/epiphany/i.test(ua)) {
+      result = {
+        name: 'Epiphany'
+        , epiphany: t
+        , version: getFirstMatch(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/puffin/i.test(ua)) {
+      result = {
+        name: 'Puffin'
+        , puffin: t
+        , version: getFirstMatch(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)
+      }
+    }
+    else if (/sleipnir/i.test(ua)) {
+      result = {
+        name: 'Sleipnir'
+        , sleipnir: t
+        , version: getFirstMatch(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/k-meleon/i.test(ua)) {
+      result = {
+        name: 'K-Meleon'
+        , kMeleon: t
+        , version: getFirstMatch(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (windowsphone) {
+      result = {
+        name: 'Windows Phone'
+      , windowsphone: t
+      }
+      if (edgeVersion) {
+        result.msedge = t
+        result.version = edgeVersion
+      }
+      else {
+        result.msie = t
+        result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/msie|trident/i.test(ua)) {
+      result = {
+        name: 'Internet Explorer'
+      , msie: t
+      , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    } else if (chromeos) {
+      result = {
+        name: 'Chrome'
+      , chromeos: t
+      , chromeBook: t
+      , chrome: t
+      , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    } else if (/chrome.+? edge/i.test(ua)) {
+      result = {
+        name: 'Microsoft Edge'
+      , msedge: t
+      , version: edgeVersion
+      }
+    }
+    else if (/vivaldi/i.test(ua)) {
+      result = {
+        name: 'Vivaldi'
+        , vivaldi: t
+        , version: getFirstMatch(/vivaldi\/(\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (sailfish) {
+      result = {
+        name: 'Sailfish'
+      , sailfish: t
+      , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/seamonkey\//i.test(ua)) {
+      result = {
+        name: 'SeaMonkey'
+      , seamonkey: t
+      , version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/firefox|iceweasel|fxios/i.test(ua)) {
+      result = {
+        name: 'Firefox'
+      , firefox: t
+      , version: getFirstMatch(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)
+      }
+      if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
+        result.firefoxos = t
+      }
+    }
+    else if (silk) {
+      result =  {
+        name: 'Amazon Silk'
+      , silk: t
+      , version : getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/phantom/i.test(ua)) {
+      result = {
+        name: 'PhantomJS'
+      , phantom: t
+      , version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/slimerjs/i.test(ua)) {
+      result = {
+        name: 'SlimerJS'
+        , slimer: t
+        , version: getFirstMatch(/slimerjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
+      result = {
+        name: 'BlackBerry'
+      , blackberry: t
+      , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (webos) {
+      result = {
+        name: 'WebOS'
+      , webos: t
+      , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+      };
+      /touchpad\//i.test(ua) && (result.touchpad = t)
+    }
+    else if (/bada/i.test(ua)) {
+      result = {
+        name: 'Bada'
+      , bada: t
+      , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+      };
+    }
+    else if (tizen) {
+      result = {
+        name: 'Tizen'
+      , tizen: t
+      , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+      };
+    }
+    else if (/qupzilla/i.test(ua)) {
+      result = {
+        name: 'QupZilla'
+        , qupzilla: t
+        , version: getFirstMatch(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i) || versionIdentifier
+      }
+    }
+    else if (/chromium/i.test(ua)) {
+      result = {
+        name: 'Chromium'
+        , chromium: t
+        , version: getFirstMatch(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/chrome|crios|crmo/i.test(ua)) {
+      result = {
+        name: 'Chrome'
+        , chrome: t
+        , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (android) {
+      result = {
+        name: 'Android'
+        , version: versionIdentifier
+      }
+    }
+    else if (/safari|applewebkit/i.test(ua)) {
+      result = {
+        name: 'Safari'
+      , safari: t
+      }
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if (iosdevice) {
+      result = {
+        name : iosdevice == 'iphone' ? 'iPhone' : iosdevice == 'ipad' ? 'iPad' : 'iPod'
+      }
+      // WTF: version is not part of user agent in web apps
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if(/googlebot/i.test(ua)) {
+      result = {
+        name: 'Googlebot'
+      , googlebot: t
+      , version: getFirstMatch(/googlebot\/(\d+(\.\d+))/i) || versionIdentifier
+      }
+    }
+    else {
+      result = {
+        name: getFirstMatch(/^(.*)\/(.*) /),
+        version: getSecondMatch(/^(.*)\/(.*) /)
+     };
+   }
+
+    // set webkit or gecko flag for browsers based on these engines
+    if (!result.msedge && /(apple)?webkit/i.test(ua)) {
+      if (/(apple)?webkit\/537\.36/i.test(ua)) {
+        result.name = result.name || "Blink"
+        result.blink = t
+      } else {
+        result.name = result.name || "Webkit"
+        result.webkit = t
+      }
+      if (!result.version && versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    } else if (!result.opera && /gecko\//i.test(ua)) {
+      result.name = result.name || "Gecko"
+      result.gecko = t
+      result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)
+    }
+
+    // set OS flags for platforms that have multiple browsers
+    if (!result.windowsphone && !result.msedge && (android || result.silk)) {
+      result.android = t
+    } else if (!result.windowsphone && !result.msedge && iosdevice) {
+      result[iosdevice] = t
+      result.ios = t
+    } else if (mac) {
+      result.mac = t
+    } else if (xbox) {
+      result.xbox = t
+    } else if (windows) {
+      result.windows = t
+    } else if (linux) {
+      result.linux = t
+    }
+
+    function getWindowsVersion (s) {
+      switch (s) {
+        case 'NT': return 'NT'
+        case 'XP': return 'XP'
+        case 'NT 5.0': return '2000'
+        case 'NT 5.1': return 'XP'
+        case 'NT 5.2': return '2003'
+        case 'NT 6.0': return 'Vista'
+        case 'NT 6.1': return '7'
+        case 'NT 6.2': return '8'
+        case 'NT 6.3': return '8.1'
+        case 'NT 10.0': return '10'
+        default: return undefined
+      }
+    }
+    
+    // OS version extraction
+    var osVersion = '';
+    if (result.windows) {
+      osVersion = getWindowsVersion(getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i))
+    } else if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (result.mac) {
+      osVersion = getFirstMatch(/Mac OS X (\d+([_\.\s]\d+)*)/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (iosdevice) {
+      osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (android) {
+      osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
+    } else if (result.webos) {
+      osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
+    } else if (result.blackberry) {
+      osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i);
+    } else if (result.bada) {
+      osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i);
+    } else if (result.tizen) {
+      osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i);
+    }
+    if (osVersion) {
+      result.osversion = osVersion;
+    }
+
+    // device type extraction
+    var osMajorVersion = !result.windows && osVersion.split('.')[0];
+    if (
+         tablet
+      || nexusTablet
+      || iosdevice == 'ipad'
+      || (android && (osMajorVersion == 3 || (osMajorVersion >= 4 && !mobile)))
+      || result.silk
+    ) {
+      result.tablet = t
+    } else if (
+         mobile
+      || iosdevice == 'iphone'
+      || iosdevice == 'ipod'
+      || android
+      || nexusMobile
+      || result.blackberry
+      || result.webos
+      || result.bada
+    ) {
+      result.mobile = t
+    }
+
+    // Graded Browser Support
+    // http://developer.yahoo.com/yui/articles/gbs
+    if (result.msedge ||
+        (result.msie && result.version >= 10) ||
+        (result.yandexbrowser && result.version >= 15) ||
+		    (result.vivaldi && result.version >= 1.0) ||
+        (result.chrome && result.version >= 20) ||
+        (result.samsungBrowser && result.version >= 4) ||
+        (result.firefox && result.version >= 20.0) ||
+        (result.safari && result.version >= 6) ||
+        (result.opera && result.version >= 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6) ||
+        (result.blackberry && result.version >= 10.1)
+        || (result.chromium && result.version >= 20)
+        ) {
+      result.a = t;
+    }
+    else if ((result.msie && result.version < 10) ||
+        (result.chrome && result.version < 20) ||
+        (result.firefox && result.version < 20.0) ||
+        (result.safari && result.version < 6) ||
+        (result.opera && result.version < 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] < 6)
+        || (result.chromium && result.version < 20)
+        ) {
+      result.c = t
+    } else result.x = t
+
+    return result
+  }
+
+  var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent || '' : '')
+
+  bowser.test = function (browserList) {
+    for (var i = 0; i < browserList.length; ++i) {
+      var browserItem = browserList[i];
+      if (typeof browserItem=== 'string') {
+        if (browserItem in bowser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Get version precisions count
+   *
+   * @example
+   *   getVersionPrecision("1.10.3") // 3
+   *
+   * @param  {string} version
+   * @return {number}
+   */
+  function getVersionPrecision(version) {
+    return version.split(".").length;
+  }
+
+  /**
+   * Array::map polyfill
+   *
+   * @param  {Array} arr
+   * @param  {Function} iterator
+   * @return {Array}
+   */
+  function map(arr, iterator) {
+    var result = [], i;
+    if (Array.prototype.map) {
+      return Array.prototype.map.call(arr, iterator);
+    }
+    for (i = 0; i < arr.length; i++) {
+      result.push(iterator(arr[i]));
+    }
+    return result;
+  }
+
+  /**
+   * Calculate browser version weight
+   *
+   * @example
+   *   compareVersions(['1.10.2.1',  '1.8.2.1.90'])    // 1
+   *   compareVersions(['1.010.2.1', '1.09.2.1.90']);  // 1
+   *   compareVersions(['1.10.2.1',  '1.10.2.1']);     // 0
+   *   compareVersions(['1.10.2.1',  '1.0800.2']);     // -1
+   *
+   * @param  {Array<String>} versions versions to compare
+   * @return {Number} comparison result
+   */
+  function compareVersions(versions) {
+    // 1) get common precision for both versions, for example for "10.0" and "9" it should be 2
+    var precision = Math.max(getVersionPrecision(versions[0]), getVersionPrecision(versions[1]));
+    var chunks = map(versions, function (version) {
+      var delta = precision - getVersionPrecision(version);
+
+      // 2) "9" -> "9.0" (for precision = 2)
+      version = version + new Array(delta + 1).join(".0");
+
+      // 3) "9.0" -> ["000000000"", "000000009"]
+      return map(version.split("."), function (chunk) {
+        return new Array(20 - chunk.length).join("0") + chunk;
+      }).reverse();
+    });
+
+    // iterate in reverse order by reversed chunks array
+    while (--precision >= 0) {
+      // 4) compare: "000000009" > "000000010" = false (but "9" > "10" = true)
+      if (chunks[0][precision] > chunks[1][precision]) {
+        return 1;
+      }
+      else if (chunks[0][precision] === chunks[1][precision]) {
+        if (precision === 0) {
+          // all version chunks are same
+          return 0;
+        }
+      }
+      else {
+        return -1;
+      }
+    }
+  }
+
+  /**
+   * Check if browser is unsupported
+   *
+   * @example
+   *   bowser.isUnsupportedBrowser({
+   *     msie: "10",
+   *     firefox: "23",
+   *     chrome: "29",
+   *     safari: "5.1",
+   *     opera: "16",
+   *     phantom: "534"
+   *   });
+   *
+   * @param  {Object}  minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function isUnsupportedBrowser(minVersions, strictMode, ua) {
+    var _bowser = bowser;
+
+    // make strictMode param optional with ua param usage
+    if (typeof strictMode === 'string') {
+      ua = strictMode;
+      strictMode = void(0);
+    }
+
+    if (strictMode === void(0)) {
+      strictMode = false;
+    }
+    if (ua) {
+      _bowser = detect(ua);
+    }
+
+    var version = "" + _bowser.version;
+    for (var browser in minVersions) {
+      if (minVersions.hasOwnProperty(browser)) {
+        if (_bowser[browser]) {
+          if (typeof minVersions[browser] !== 'string') {
+            throw new Error('Browser version in the minVersion map should be a string: ' + browser + ': ' + String(minVersions));
+          }
+
+          // browser version and min supported version.
+          return compareVersions([version, minVersions[browser]]) < 0;
+        }
+      }
+    }
+
+    return strictMode; // not found
+  }
+
+  /**
+   * Check if browser is supported
+   *
+   * @param  {Object} minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function check(minVersions, strictMode, ua) {
+    return !isUnsupportedBrowser(minVersions, strictMode, ua);
+  }
+
+  bowser.isUnsupportedBrowser = isUnsupportedBrowser;
+  bowser.compareVersions = compareVersions;
+  bowser.check = check;
+
+  /*
+   * Set our detect method to the main bowser object so we can
+   * reuse it to test other user agents.
+   * This is needed to implement future tests.
+   */
+  bowser._detect = detect;
+
+  return bowser
+});
+
+
+/***/ }),
+/* 199 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -48037,14 +48655,14 @@ module.exports = {
 };
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var accounting = __webpack_require__(197)
-var assign = __webpack_require__(323)
-var localeCurrency = __webpack_require__(319)
-var currencies = __webpack_require__(198)
-var localeFormats = __webpack_require__(200)
+var assign = __webpack_require__(324)
+var localeCurrency = __webpack_require__(320)
+var currencies = __webpack_require__(199)
+var localeFormats = __webpack_require__(201)
 
 var defaultCurrency = {
   symbol: '',
@@ -48152,7 +48770,7 @@ module.exports = {
 }
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -48208,7 +48826,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48419,7 +49037,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48462,23 +49080,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _srcStreamingMediaPlayer = __webpack_require__(70);
+var _srcStreamingMediaPlayer = __webpack_require__(71);
 
 var _srcStreamingMediaPlayer2 = _interopRequireDefault(_srcStreamingMediaPlayer);
 
-var _srcStreamingProtectionProtection = __webpack_require__(74);
+var _srcStreamingProtectionProtection = __webpack_require__(75);
 
 var _srcStreamingProtectionProtection2 = _interopRequireDefault(_srcStreamingProtectionProtection);
 
-var _srcStreamingMetricsMetricsReporting = __webpack_require__(240);
+var _srcStreamingMetricsMetricsReporting = __webpack_require__(241);
 
 var _srcStreamingMetricsMetricsReporting2 = _interopRequireDefault(_srcStreamingMetricsMetricsReporting);
 
-var _srcStreamingMediaPlayerFactory = __webpack_require__(228);
+var _srcStreamingMediaPlayerFactory = __webpack_require__(229);
 
 var _srcStreamingMediaPlayerFactory2 = _interopRequireDefault(_srcStreamingMediaPlayerFactory);
 
-var _srcCoreVersion = __webpack_require__(64);
+var _srcCoreVersion = __webpack_require__(65);
 
 // Shove both of these into the global scope
 var context = typeof window !== 'undefined' && window || global;
@@ -48501,10 +49119,10 @@ exports.MetricsReporting = _srcStreamingMetricsMetricsReporting2['default'];
 exports.MediaPlayerFactory = _srcStreamingMediaPlayerFactory2['default'];
 //# sourceMappingURL=index.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48552,7 +49170,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _EventsBase2 = __webpack_require__(35);
+var _EventsBase2 = __webpack_require__(36);
 
 var _EventsBase3 = _interopRequireDefault(_EventsBase2);
 
@@ -48616,7 +49234,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48658,43 +49276,43 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _streamingVoFragmentRequest = __webpack_require__(29);
+var _streamingVoFragmentRequest = __webpack_require__(30);
 
 var _streamingVoFragmentRequest2 = _interopRequireDefault(_streamingVoFragmentRequest);
 
-var _streamingVoError = __webpack_require__(18);
+var _streamingVoError = __webpack_require__(19);
 
 var _streamingVoError2 = _interopRequireDefault(_streamingVoError);
 
-var _streamingVoMetricsHTTPRequest = __webpack_require__(17);
+var _streamingVoMetricsHTTPRequest = __webpack_require__(18);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _streamingUtilsURLUtils = __webpack_require__(34);
+var _streamingUtilsURLUtils = __webpack_require__(35);
 
 var _streamingUtilsURLUtils2 = _interopRequireDefault(_streamingUtilsURLUtils);
 
-var _voRepresentation = __webpack_require__(48);
+var _voRepresentation = __webpack_require__(49);
 
 var _voRepresentation2 = _interopRequireDefault(_voRepresentation);
 
-var _utilsSegmentsUtils = __webpack_require__(37);
+var _utilsSegmentsUtils = __webpack_require__(38);
 
-var _utilsSegmentsGetter = __webpack_require__(218);
+var _utilsSegmentsGetter = __webpack_require__(219);
 
 var _utilsSegmentsGetter2 = _interopRequireDefault(_utilsSegmentsGetter);
 
@@ -49149,7 +49767,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -49191,49 +49809,49 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _streamingUtilsRequestModifier = __webpack_require__(43);
+var _streamingUtilsRequestModifier = __webpack_require__(44);
 
 var _streamingUtilsRequestModifier2 = _interopRequireDefault(_streamingUtilsRequestModifier);
 
-var _voSegment = __webpack_require__(49);
+var _voSegment = __webpack_require__(50);
 
 var _voSegment2 = _interopRequireDefault(_voSegment);
 
-var _streamingVoError = __webpack_require__(18);
+var _streamingVoError = __webpack_require__(19);
 
 var _streamingVoError2 = _interopRequireDefault(_streamingVoError);
 
-var _streamingUtilsErrorHandler = __webpack_require__(21);
+var _streamingUtilsErrorHandler = __webpack_require__(22);
 
 var _streamingUtilsErrorHandler2 = _interopRequireDefault(_streamingUtilsErrorHandler);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _streamingUtilsBoxParser = __webpack_require__(58);
+var _streamingUtilsBoxParser = __webpack_require__(59);
 
 var _streamingUtilsBoxParser2 = _interopRequireDefault(_streamingUtilsBoxParser);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _streamingVoMetricsHTTPRequest = __webpack_require__(17);
+var _streamingVoMetricsHTTPRequest = __webpack_require__(18);
 
-var _streamingVoFragmentRequest = __webpack_require__(29);
+var _streamingVoFragmentRequest = __webpack_require__(30);
 
 var _streamingVoFragmentRequest2 = _interopRequireDefault(_streamingVoFragmentRequest);
 
-var _streamingXHRLoader = __webpack_require__(31);
+var _streamingXHRLoader = __webpack_require__(32);
 
 var _streamingXHRLoader2 = _interopRequireDefault(_streamingXHRLoader);
 
@@ -49517,7 +50135,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -49529,45 +50147,45 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _streamingUtilsEBMLParser = __webpack_require__(291);
+var _streamingUtilsEBMLParser = __webpack_require__(292);
 
 var _streamingUtilsEBMLParser2 = _interopRequireDefault(_streamingUtilsEBMLParser);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _streamingUtilsErrorHandler = __webpack_require__(21);
+var _streamingUtilsErrorHandler = __webpack_require__(22);
 
 var _streamingUtilsErrorHandler2 = _interopRequireDefault(_streamingUtilsErrorHandler);
 
-var _streamingUtilsRequestModifier = __webpack_require__(43);
+var _streamingUtilsRequestModifier = __webpack_require__(44);
 
 var _streamingUtilsRequestModifier2 = _interopRequireDefault(_streamingUtilsRequestModifier);
 
-var _voSegment = __webpack_require__(49);
+var _voSegment = __webpack_require__(50);
 
 var _voSegment2 = _interopRequireDefault(_voSegment);
 
-var _streamingVoMetricsHTTPRequest = __webpack_require__(17);
+var _streamingVoMetricsHTTPRequest = __webpack_require__(18);
 
-var _streamingVoFragmentRequest = __webpack_require__(29);
+var _streamingVoFragmentRequest = __webpack_require__(30);
 
 var _streamingVoFragmentRequest2 = _interopRequireDefault(_streamingVoFragmentRequest);
 
-var _streamingXHRLoader = __webpack_require__(31);
+var _streamingXHRLoader = __webpack_require__(32);
 
 var _streamingXHRLoader2 = _interopRequireDefault(_streamingXHRLoader);
 
@@ -49962,7 +50580,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50004,59 +50622,59 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _modelsDashManifestModel = __webpack_require__(23);
+var _modelsDashManifestModel = __webpack_require__(24);
 
 var _modelsDashManifestModel2 = _interopRequireDefault(_modelsDashManifestModel);
 
-var _DashMetrics = __webpack_require__(22);
+var _DashMetrics = __webpack_require__(23);
 
 var _DashMetrics2 = _interopRequireDefault(_DashMetrics);
 
-var _utilsTimelineConverter = __webpack_require__(47);
+var _utilsTimelineConverter = __webpack_require__(48);
 
 var _utilsTimelineConverter2 = _interopRequireDefault(_utilsTimelineConverter);
 
-var _streamingControllersAbrController = __webpack_require__(24);
+var _streamingControllersAbrController = __webpack_require__(25);
 
 var _streamingControllersAbrController2 = _interopRequireDefault(_streamingControllersAbrController);
 
-var _streamingControllersPlaybackController = __webpack_require__(26);
+var _streamingControllersPlaybackController = __webpack_require__(27);
 
 var _streamingControllersPlaybackController2 = _interopRequireDefault(_streamingControllersPlaybackController);
 
-var _streamingModelsManifestModel = __webpack_require__(41);
+var _streamingModelsManifestModel = __webpack_require__(42);
 
 var _streamingModelsManifestModel2 = _interopRequireDefault(_streamingModelsManifestModel);
 
-var _streamingModelsMetricsModel = __webpack_require__(20);
+var _streamingModelsMetricsModel = __webpack_require__(21);
 
 var _streamingModelsMetricsModel2 = _interopRequireDefault(_streamingModelsMetricsModel);
 
-var _streamingUtilsDOMStorage = __webpack_require__(59);
+var _streamingUtilsDOMStorage = __webpack_require__(60);
 
 var _streamingUtilsDOMStorage2 = _interopRequireDefault(_streamingUtilsDOMStorage);
 
-var _streamingVoError = __webpack_require__(18);
+var _streamingVoError = __webpack_require__(19);
 
 var _streamingVoError2 = _interopRequireDefault(_streamingVoError);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _streamingMediaPlayerEvents = __webpack_require__(30);
+var _streamingMediaPlayerEvents = __webpack_require__(31);
 
 var _streamingMediaPlayerEvents2 = _interopRequireDefault(_streamingMediaPlayerEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voRepresentation = __webpack_require__(48);
+var _voRepresentation = __webpack_require__(49);
 
 var _voRepresentation2 = _interopRequireDefault(_voRepresentation);
 
@@ -50378,7 +50996,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50420,47 +51038,47 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _streamingUtilsErrorHandler = __webpack_require__(21);
+var _streamingUtilsErrorHandler = __webpack_require__(22);
 
 var _streamingUtilsErrorHandler2 = _interopRequireDefault(_streamingUtilsErrorHandler);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _externalsObjectiron = __webpack_require__(201);
+var _externalsObjectiron = __webpack_require__(202);
 
 var _externalsObjectiron2 = _interopRequireDefault(_externalsObjectiron);
 
-var _externalsXml2json = __webpack_require__(45);
+var _externalsXml2json = __webpack_require__(46);
 
 var _externalsXml2json2 = _interopRequireDefault(_externalsXml2json);
 
-var _matchersStringMatcher = __webpack_require__(215);
+var _matchersStringMatcher = __webpack_require__(216);
 
 var _matchersStringMatcher2 = _interopRequireDefault(_matchersStringMatcher);
 
-var _matchersDurationMatcher = __webpack_require__(213);
+var _matchersDurationMatcher = __webpack_require__(214);
 
 var _matchersDurationMatcher2 = _interopRequireDefault(_matchersDurationMatcher);
 
-var _matchersDateTimeMatcher = __webpack_require__(212);
+var _matchersDateTimeMatcher = __webpack_require__(213);
 
 var _matchersDateTimeMatcher2 = _interopRequireDefault(_matchersDateTimeMatcher);
 
-var _matchersNumericMatcher = __webpack_require__(214);
+var _matchersNumericMatcher = __webpack_require__(215);
 
 var _matchersNumericMatcher2 = _interopRequireDefault(_matchersNumericMatcher);
 
-var _mapsRepresentationBaseValuesMap = __webpack_require__(210);
+var _mapsRepresentationBaseValuesMap = __webpack_require__(211);
 
 var _mapsRepresentationBaseValuesMap2 = _interopRequireDefault(_mapsRepresentationBaseValuesMap);
 
-var _mapsSegmentValuesMap = __webpack_require__(211);
+var _mapsSegmentValuesMap = __webpack_require__(212);
 
 var _mapsSegmentValuesMap2 = _interopRequireDefault(_mapsSegmentValuesMap);
 
@@ -50539,7 +51157,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50620,7 +51238,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50671,7 +51289,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _MapNode2 = __webpack_require__(66);
+var _MapNode2 = __webpack_require__(67);
 
 var _MapNode3 = _interopRequireDefault(_MapNode2);
 
@@ -50695,7 +51313,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50746,7 +51364,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _MapNode2 = __webpack_require__(66);
+var _MapNode2 = __webpack_require__(67);
 
 var _MapNode3 = _interopRequireDefault(_MapNode2);
 
@@ -50770,7 +51388,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50821,7 +51439,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _BaseMatcher2 = __webpack_require__(36);
+var _BaseMatcher2 = __webpack_require__(37);
 
 var _BaseMatcher3 = _interopRequireDefault(_BaseMatcher2);
 
@@ -50868,7 +51486,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50919,7 +51537,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _BaseMatcher2 = __webpack_require__(36);
+var _BaseMatcher2 = __webpack_require__(37);
 
 var _BaseMatcher3 = _interopRequireDefault(_BaseMatcher2);
 
@@ -50970,7 +51588,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51021,7 +51639,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _BaseMatcher2 = __webpack_require__(36);
+var _BaseMatcher2 = __webpack_require__(37);
 
 var _BaseMatcher3 = _interopRequireDefault(_BaseMatcher2);
 
@@ -51049,7 +51667,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51100,7 +51718,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _BaseMatcher2 = __webpack_require__(36);
+var _BaseMatcher2 = __webpack_require__(37);
 
 var _BaseMatcher3 = _interopRequireDefault(_BaseMatcher2);
 
@@ -51164,7 +51782,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51207,7 +51825,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -51300,7 +51918,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51343,11 +51961,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _SegmentsUtils = __webpack_require__(37);
+var _SegmentsUtils = __webpack_require__(38);
 
 function ListSegmentsGetter(config, isDynamic) {
 
@@ -51403,7 +52021,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51446,19 +52064,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _TimelineSegmentsGetter = __webpack_require__(220);
+var _TimelineSegmentsGetter = __webpack_require__(221);
 
 var _TimelineSegmentsGetter2 = _interopRequireDefault(_TimelineSegmentsGetter);
 
-var _TemplateSegmentsGetter = __webpack_require__(219);
+var _TemplateSegmentsGetter = __webpack_require__(220);
 
 var _TemplateSegmentsGetter2 = _interopRequireDefault(_TemplateSegmentsGetter);
 
-var _ListSegmentsGetter = __webpack_require__(217);
+var _ListSegmentsGetter = __webpack_require__(218);
 
 var _ListSegmentsGetter2 = _interopRequireDefault(_ListSegmentsGetter);
 
@@ -51535,7 +52153,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51578,11 +52196,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _SegmentsUtils = __webpack_require__(37);
+var _SegmentsUtils = __webpack_require__(38);
 
 function TemplateSegmentsGetter(config, isDynamic) {
 
@@ -51649,7 +52267,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51692,11 +52310,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _SegmentsUtils = __webpack_require__(37);
+var _SegmentsUtils = __webpack_require__(38);
 
 function TimelineSegmentsGetter(config, isDynamic) {
 
@@ -51843,7 +52461,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51903,7 +52521,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51966,7 +52584,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52031,7 +52649,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52095,7 +52713,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52137,27 +52755,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _XHRLoader = __webpack_require__(31);
+var _XHRLoader = __webpack_require__(32);
 
 var _XHRLoader2 = _interopRequireDefault(_XHRLoader);
 
-var _voHeadRequest = __webpack_require__(300);
+var _voHeadRequest = __webpack_require__(301);
 
 var _voHeadRequest2 = _interopRequireDefault(_voHeadRequest);
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -52272,7 +52890,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52314,45 +52932,45 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersXlinkController = __webpack_require__(239);
+var _controllersXlinkController = __webpack_require__(240);
 
 var _controllersXlinkController2 = _interopRequireDefault(_controllersXlinkController);
 
-var _XHRLoader = __webpack_require__(31);
+var _XHRLoader = __webpack_require__(32);
 
 var _XHRLoader2 = _interopRequireDefault(_XHRLoader);
 
-var _utilsURLUtils = __webpack_require__(34);
+var _utilsURLUtils = __webpack_require__(35);
 
 var _utilsURLUtils2 = _interopRequireDefault(_utilsURLUtils);
 
-var _utilsErrorHandler = __webpack_require__(21);
+var _utilsErrorHandler = __webpack_require__(22);
 
 var _utilsErrorHandler2 = _interopRequireDefault(_utilsErrorHandler);
 
-var _voTextRequest = __webpack_require__(79);
+var _voTextRequest = __webpack_require__(80);
 
 var _voTextRequest2 = _interopRequireDefault(_voTextRequest);
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _dashParserDashParser = __webpack_require__(208);
+var _dashParserDashParser = __webpack_require__(209);
 
 var _dashParserDashParser2 = _interopRequireDefault(_dashParserDashParser);
 
@@ -52522,7 +53140,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52564,23 +53182,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -52732,7 +53350,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52744,7 +53362,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _MediaPlayer = __webpack_require__(70);
+var _MediaPlayer = __webpack_require__(71);
 
 var _MediaPlayer2 = _interopRequireDefault(_MediaPlayer);
 
@@ -52886,7 +53504,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52928,75 +53546,75 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utilsLiveEdgeFinder = __webpack_require__(61);
+var _utilsLiveEdgeFinder = __webpack_require__(62);
 
 var _utilsLiveEdgeFinder2 = _interopRequireDefault(_utilsLiveEdgeFinder);
 
-var _StreamProcessor = __webpack_require__(230);
+var _StreamProcessor = __webpack_require__(231);
 
 var _StreamProcessor2 = _interopRequireDefault(_StreamProcessor);
 
-var _controllersMediaController = __webpack_require__(27);
+var _controllersMediaController = __webpack_require__(28);
 
 var _controllersMediaController2 = _interopRequireDefault(_controllersMediaController);
 
-var _controllersEventController = __webpack_require__(234);
+var _controllersEventController = __webpack_require__(235);
 
 var _controllersEventController2 = _interopRequireDefault(_controllersEventController);
 
-var _controllersFragmentController = __webpack_require__(235);
+var _controllersFragmentController = __webpack_require__(236);
 
 var _controllersFragmentController2 = _interopRequireDefault(_controllersFragmentController);
 
-var _controllersAbrController = __webpack_require__(24);
+var _controllersAbrController = __webpack_require__(25);
 
 var _controllersAbrController2 = _interopRequireDefault(_controllersAbrController);
 
-var _modelsVideoModel = __webpack_require__(32);
+var _modelsVideoModel = __webpack_require__(33);
 
 var _modelsVideoModel2 = _interopRequireDefault(_modelsVideoModel);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _controllersPlaybackController = __webpack_require__(26);
+var _controllersPlaybackController = __webpack_require__(27);
 
 var _controllersPlaybackController2 = _interopRequireDefault(_controllersPlaybackController);
 
-var _dashDashHandler = __webpack_require__(204);
+var _dashDashHandler = __webpack_require__(205);
 
 var _dashDashHandler2 = _interopRequireDefault(_dashDashHandler);
 
-var _dashSegmentBaseLoader = __webpack_require__(205);
+var _dashSegmentBaseLoader = __webpack_require__(206);
 
 var _dashSegmentBaseLoader2 = _interopRequireDefault(_dashSegmentBaseLoader);
 
-var _dashWebmSegmentBaseLoader = __webpack_require__(206);
+var _dashWebmSegmentBaseLoader = __webpack_require__(207);
 
 var _dashWebmSegmentBaseLoader2 = _interopRequireDefault(_dashWebmSegmentBaseLoader);
 
-var _dashDashMetrics = __webpack_require__(22);
+var _dashDashMetrics = __webpack_require__(23);
 
 var _dashDashMetrics2 = _interopRequireDefault(_dashDashMetrics);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
@@ -53534,7 +54152,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53577,71 +54195,71 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersAbrController = __webpack_require__(24);
+var _controllersAbrController = __webpack_require__(25);
 
 var _controllersAbrController2 = _interopRequireDefault(_controllersAbrController);
 
-var _controllersBufferController = __webpack_require__(25);
+var _controllersBufferController = __webpack_require__(26);
 
 var _controllersBufferController2 = _interopRequireDefault(_controllersBufferController);
 
-var _controllersStreamController = __webpack_require__(50);
+var _controllersStreamController = __webpack_require__(51);
 
 var _controllersStreamController2 = _interopRequireDefault(_controllersStreamController);
 
-var _controllersMediaController = __webpack_require__(27);
+var _controllersMediaController = __webpack_require__(28);
 
 var _controllersMediaController2 = _interopRequireDefault(_controllersMediaController);
 
-var _textTextBufferController = __webpack_require__(287);
+var _textTextBufferController = __webpack_require__(288);
 
 var _textTextBufferController2 = _interopRequireDefault(_textTextBufferController);
 
-var _controllersScheduleController = __webpack_require__(237);
+var _controllersScheduleController = __webpack_require__(238);
 
 var _controllersScheduleController2 = _interopRequireDefault(_controllersScheduleController);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _FragmentLoader = __webpack_require__(225);
+var _FragmentLoader = __webpack_require__(226);
 
 var _FragmentLoader2 = _interopRequireDefault(_FragmentLoader);
 
-var _utilsRequestModifier = __webpack_require__(43);
+var _utilsRequestModifier = __webpack_require__(44);
 
 var _utilsRequestModifier2 = _interopRequireDefault(_utilsRequestModifier);
 
-var _controllersSourceBufferController = __webpack_require__(38);
+var _controllersSourceBufferController = __webpack_require__(39);
 
 var _controllersSourceBufferController2 = _interopRequireDefault(_controllersSourceBufferController);
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
-var _dashModelsDashManifestModel = __webpack_require__(23);
+var _dashModelsDashManifestModel = __webpack_require__(24);
 
 var _dashModelsDashManifestModel2 = _interopRequireDefault(_dashModelsDashManifestModel);
 
-var _dashDashMetrics = __webpack_require__(22);
+var _dashDashMetrics = __webpack_require__(23);
 
 var _dashDashMetrics2 = _interopRequireDefault(_dashDashMetrics);
 
-var _dashControllersRepresentationController = __webpack_require__(207);
+var _dashControllersRepresentationController = __webpack_require__(208);
 
 var _dashControllersRepresentationController2 = _interopRequireDefault(_dashControllersRepresentationController);
 
-var _utilsErrorHandler = __webpack_require__(21);
+var _utilsErrorHandler = __webpack_require__(22);
 
 var _utilsErrorHandler2 = _interopRequireDefault(_utilsErrorHandler);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -53920,7 +54538,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53962,29 +54580,29 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _XHRLoader = __webpack_require__(31);
+var _XHRLoader = __webpack_require__(32);
 
 var _XHRLoader2 = _interopRequireDefault(_XHRLoader);
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _voTextRequest = __webpack_require__(79);
+var _voTextRequest = __webpack_require__(80);
 
 var _voTextRequest2 = _interopRequireDefault(_voTextRequest);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -54059,7 +54677,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54102,31 +54720,31 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _modelsBaseURLTreeModel = __webpack_require__(259);
+var _modelsBaseURLTreeModel = __webpack_require__(260);
 
 var _modelsBaseURLTreeModel2 = _interopRequireDefault(_modelsBaseURLTreeModel);
 
-var _utilsBaseURLSelector = __webpack_require__(289);
+var _utilsBaseURLSelector = __webpack_require__(290);
 
 var _utilsBaseURLSelector2 = _interopRequireDefault(_utilsBaseURLSelector);
 
-var _utilsURLUtils = __webpack_require__(34);
+var _utilsURLUtils = __webpack_require__(35);
 
 var _utilsURLUtils2 = _interopRequireDefault(_utilsURLUtils);
 
-var _dashVoBaseURL = __webpack_require__(67);
+var _dashVoBaseURL = __webpack_require__(68);
 
 var _dashVoBaseURL2 = _interopRequireDefault(_dashVoBaseURL);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
@@ -54220,7 +54838,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 233 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54263,11 +54881,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
@@ -54331,7 +54949,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 234 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54374,19 +54992,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersPlaybackController = __webpack_require__(26);
+var _controllersPlaybackController = __webpack_require__(27);
 
 var _controllersPlaybackController2 = _interopRequireDefault(_controllersPlaybackController);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
@@ -54586,7 +55204,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54628,33 +55246,33 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _voDataChunk = __webpack_require__(299);
+var _voDataChunk = __webpack_require__(300);
 
 var _voDataChunk2 = _interopRequireDefault(_voDataChunk);
 
-var _modelsFragmentModel = __webpack_require__(40);
+var _modelsFragmentModel = __webpack_require__(41);
 
 var _modelsFragmentModel2 = _interopRequireDefault(_modelsFragmentModel);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -54746,7 +55364,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54788,7 +55406,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -54864,7 +55482,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 237 */
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54907,65 +55525,65 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voMetricsPlayList = __webpack_require__(80);
+var _voMetricsPlayList = __webpack_require__(81);
 
-var _PlaybackController = __webpack_require__(26);
+var _PlaybackController = __webpack_require__(27);
 
 var _PlaybackController2 = _interopRequireDefault(_PlaybackController);
 
-var _AbrController = __webpack_require__(24);
+var _AbrController = __webpack_require__(25);
 
 var _AbrController2 = _interopRequireDefault(_AbrController);
 
-var _BufferController = __webpack_require__(25);
+var _BufferController = __webpack_require__(26);
 
 var _BufferController2 = _interopRequireDefault(_BufferController);
 
-var _MediaController = __webpack_require__(27);
+var _MediaController = __webpack_require__(28);
 
 var _MediaController2 = _interopRequireDefault(_MediaController);
 
-var _rulesSchedulingBufferLevelRule = __webpack_require__(283);
+var _rulesSchedulingBufferLevelRule = __webpack_require__(284);
 
 var _rulesSchedulingBufferLevelRule2 = _interopRequireDefault(_rulesSchedulingBufferLevelRule);
 
-var _rulesSchedulingNextFragmentRequestRule = __webpack_require__(284);
+var _rulesSchedulingNextFragmentRequestRule = __webpack_require__(285);
 
 var _rulesSchedulingNextFragmentRequestRule2 = _interopRequireDefault(_rulesSchedulingNextFragmentRequestRule);
 
-var _textTextController = __webpack_require__(28);
+var _textTextController = __webpack_require__(29);
 
 var _textTextController2 = _interopRequireDefault(_textTextController);
 
-var _modelsFragmentModel = __webpack_require__(40);
+var _modelsFragmentModel = __webpack_require__(41);
 
 var _modelsFragmentModel2 = _interopRequireDefault(_modelsFragmentModel);
 
-var _controllersSourceBufferController = __webpack_require__(38);
+var _controllersSourceBufferController = __webpack_require__(39);
 
 var _controllersSourceBufferController2 = _interopRequireDefault(_controllersSourceBufferController);
 
-var _utilsLiveEdgeFinder = __webpack_require__(61);
+var _utilsLiveEdgeFinder = __webpack_require__(62);
 
 var _utilsLiveEdgeFinder2 = _interopRequireDefault(_utilsLiveEdgeFinder);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _controllersStreamController = __webpack_require__(50);
+var _controllersStreamController = __webpack_require__(51);
 
 var _controllersStreamController2 = _interopRequireDefault(_controllersStreamController);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -55480,7 +56098,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 238 */
+/* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55523,23 +56141,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -55857,7 +56475,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 239 */
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55899,27 +56517,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _XlinkLoader = __webpack_require__(231);
+var _XlinkLoader = __webpack_require__(232);
 
 var _XlinkLoader2 = _interopRequireDefault(_XlinkLoader);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _externalsXml2json = __webpack_require__(45);
+var _externalsXml2json = __webpack_require__(46);
 
 var _externalsXml2json2 = _interopRequireDefault(_externalsXml2json);
 
-var _utilsURLUtils = __webpack_require__(34);
+var _utilsURLUtils = __webpack_require__(35);
 
 var _utilsURLUtils2 = _interopRequireDefault(_utilsURLUtils);
 
@@ -56172,7 +56790,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 240 */
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56215,27 +56833,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utilsDVBErrorsTranslator = __webpack_require__(251);
+var _utilsDVBErrorsTranslator = __webpack_require__(252);
 
 var _utilsDVBErrorsTranslator2 = _interopRequireDefault(_utilsDVBErrorsTranslator);
 
-var _MetricsReportingEvents = __webpack_require__(39);
+var _MetricsReportingEvents = __webpack_require__(40);
 
 var _MetricsReportingEvents2 = _interopRequireDefault(_MetricsReportingEvents);
 
-var _controllersMetricsCollectionController = __webpack_require__(241);
+var _controllersMetricsCollectionController = __webpack_require__(242);
 
 var _controllersMetricsCollectionController2 = _interopRequireDefault(_controllersMetricsCollectionController);
 
-var _metricsMetricsHandlerFactory = __webpack_require__(71);
+var _metricsMetricsHandlerFactory = __webpack_require__(72);
 
 var _metricsMetricsHandlerFactory2 = _interopRequireDefault(_metricsMetricsHandlerFactory);
 
-var _reportingReportingFactory = __webpack_require__(72);
+var _reportingReportingFactory = __webpack_require__(73);
 
 var _reportingReportingFactory2 = _interopRequireDefault(_reportingReportingFactory);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -56294,7 +56912,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 241 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56337,23 +56955,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _MetricsController = __webpack_require__(242);
+var _MetricsController = __webpack_require__(243);
 
 var _MetricsController2 = _interopRequireDefault(_MetricsController);
 
-var _utilsManifestParsing = __webpack_require__(252);
+var _utilsManifestParsing = __webpack_require__(253);
 
 var _utilsManifestParsing2 = _interopRequireDefault(_utilsManifestParsing);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _MetricsReportingEvents = __webpack_require__(39);
+var _MetricsReportingEvents = __webpack_require__(40);
 
 var _MetricsReportingEvents2 = _interopRequireDefault(_MetricsReportingEvents);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
@@ -56429,7 +57047,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 242 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56472,19 +57090,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _RangeController = __webpack_require__(244);
+var _RangeController = __webpack_require__(245);
 
 var _RangeController2 = _interopRequireDefault(_RangeController);
 
-var _ReportingController = __webpack_require__(245);
+var _ReportingController = __webpack_require__(246);
 
 var _ReportingController2 = _interopRequireDefault(_ReportingController);
 
-var _MetricsHandlersController = __webpack_require__(243);
+var _MetricsHandlersController = __webpack_require__(244);
 
 var _MetricsHandlersController2 = _interopRequireDefault(_MetricsHandlersController);
 
@@ -56552,7 +57170,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56595,15 +57213,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _metricsMetricsHandlerFactory = __webpack_require__(71);
+var _metricsMetricsHandlerFactory = __webpack_require__(72);
 
 var _metricsMetricsHandlerFactory2 = _interopRequireDefault(_metricsMetricsHandlerFactory);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _MediaPlayerEvents = __webpack_require__(30);
+var _MediaPlayerEvents = __webpack_require__(31);
 
 var _MediaPlayerEvents2 = _interopRequireDefault(_MediaPlayerEvents);
 
@@ -56682,7 +57300,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56725,11 +57343,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _utilsCustomTimeRanges = __webpack_require__(78);
+var _utilsCustomTimeRanges = __webpack_require__(79);
 
 var _utilsCustomTimeRanges2 = _interopRequireDefault(_utilsCustomTimeRanges);
 
@@ -56805,7 +57423,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56848,11 +57466,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _reportingReportingFactory = __webpack_require__(72);
+var _reportingReportingFactory = __webpack_require__(73);
 
 var _reportingReportingFactory2 = _interopRequireDefault(_reportingReportingFactory);
 
@@ -56909,7 +57527,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56952,11 +57570,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _utilsHandlerHelpers = __webpack_require__(73);
+var _utilsHandlerHelpers = __webpack_require__(74);
 
 var _utilsHandlerHelpers2 = _interopRequireDefault(_utilsHandlerHelpers);
 
@@ -57038,7 +57656,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57081,11 +57699,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _MetricsReportingEvents = __webpack_require__(39);
+var _MetricsReportingEvents = __webpack_require__(40);
 
 var _MetricsReportingEvents2 = _interopRequireDefault(_MetricsReportingEvents);
 
@@ -57141,7 +57759,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57184,7 +57802,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -57229,7 +57847,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57272,11 +57890,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _utilsHandlerHelpers = __webpack_require__(73);
+var _utilsHandlerHelpers = __webpack_require__(74);
 
 var _utilsHandlerHelpers2 = _interopRequireDefault(_utilsHandlerHelpers);
 
@@ -57357,7 +57975,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57399,15 +58017,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _utilsMetricSerialiser = __webpack_require__(253);
+var _utilsMetricSerialiser = __webpack_require__(254);
 
 var _utilsMetricSerialiser2 = _interopRequireDefault(_utilsMetricSerialiser);
 
-var _utilsRNG = __webpack_require__(254);
+var _utilsRNG = __webpack_require__(255);
 
 var _utilsRNG2 = _interopRequireDefault(_utilsRNG);
 
@@ -57563,7 +58181,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57606,23 +58224,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voDVBErrors = __webpack_require__(255);
+var _voDVBErrors = __webpack_require__(256);
 
 var _voDVBErrors2 = _interopRequireDefault(_voDVBErrors);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _MediaPlayerEvents = __webpack_require__(30);
+var _MediaPlayerEvents = __webpack_require__(31);
 
 var _MediaPlayerEvents2 = _interopRequireDefault(_MediaPlayerEvents);
 
-var _MetricsReportingEvents = __webpack_require__(39);
+var _MetricsReportingEvents = __webpack_require__(40);
 
 var _MetricsReportingEvents2 = _interopRequireDefault(_MetricsReportingEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -57758,7 +58376,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57770,19 +58388,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voMetrics = __webpack_require__(256);
+var _voMetrics = __webpack_require__(257);
 
 var _voMetrics2 = _interopRequireDefault(_voMetrics);
 
-var _voRange = __webpack_require__(257);
+var _voRange = __webpack_require__(258);
 
 var _voRange2 = _interopRequireDefault(_voRange);
 
-var _voReporting = __webpack_require__(258);
+var _voReporting = __webpack_require__(259);
 
 var _voReporting2 = _interopRequireDefault(_voReporting);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -57905,7 +58523,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57948,7 +58566,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -58022,7 +58640,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58065,7 +58683,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -58139,7 +58757,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58253,7 +58871,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58313,7 +58931,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58376,7 +58994,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58436,7 +59054,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58481,15 +59099,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _dashModelsDashManifestModel = __webpack_require__(23);
+var _dashModelsDashManifestModel = __webpack_require__(24);
 
 var _dashModelsDashManifestModel2 = _interopRequireDefault(_dashModelsDashManifestModel);
 
-var _utilsObjectUtils = __webpack_require__(293);
+var _utilsObjectUtils = __webpack_require__(294);
 
 var _utilsObjectUtils2 = _interopRequireDefault(_utilsObjectUtils);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -58624,7 +59242,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58672,7 +59290,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _coreEventsEventsBase = __webpack_require__(35);
+var _coreEventsEventsBase = __webpack_require__(36);
 
 var _coreEventsEventsBase2 = _interopRequireDefault(_coreEventsEventsBase);
 
@@ -58833,7 +59451,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58875,27 +59493,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _CommonEncryption = __webpack_require__(33);
+var _CommonEncryption = __webpack_require__(34);
 
 var _CommonEncryption2 = _interopRequireDefault(_CommonEncryption);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _voMediaCapability = __webpack_require__(272);
+var _voMediaCapability = __webpack_require__(273);
 
 var _voMediaCapability2 = _interopRequireDefault(_voMediaCapability);
 
-var _voKeySystemConfiguration = __webpack_require__(55);
+var _voKeySystemConfiguration = __webpack_require__(56);
 
 var _voKeySystemConfiguration2 = _interopRequireDefault(_voKeySystemConfiguration);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _Protection = __webpack_require__(74);
+var _Protection = __webpack_require__(75);
 
 var _Protection2 = _interopRequireDefault(_Protection);
 
@@ -59442,7 +60060,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59485,19 +60103,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voKeyPair = __webpack_require__(76);
+var _voKeyPair = __webpack_require__(77);
 
 var _voKeyPair2 = _interopRequireDefault(_voKeyPair);
 
-var _voClearKeyKeySet = __webpack_require__(75);
+var _voClearKeyKeySet = __webpack_require__(76);
 
 var _voClearKeyKeySet2 = _interopRequireDefault(_voClearKeyKeySet);
 
-var _CommonEncryption = __webpack_require__(33);
+var _CommonEncryption = __webpack_require__(34);
 
 var _CommonEncryption2 = _interopRequireDefault(_CommonEncryption);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -59576,7 +60194,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59625,19 +60243,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _CommonEncryption = __webpack_require__(33);
+var _CommonEncryption = __webpack_require__(34);
 
 var _CommonEncryption2 = _interopRequireDefault(_CommonEncryption);
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _externalsBase64 = __webpack_require__(44);
+var _externalsBase64 = __webpack_require__(45);
 
 var _externalsBase642 = _interopRequireDefault(_externalsBase64);
 
@@ -59827,7 +60445,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59877,11 +60495,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _CommonEncryption = __webpack_require__(33);
+var _CommonEncryption = __webpack_require__(34);
 
 var _CommonEncryption2 = _interopRequireDefault(_CommonEncryption);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -59929,7 +60547,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59980,39 +60598,39 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersProtectionKeyController = __webpack_require__(42);
+var _controllersProtectionKeyController = __webpack_require__(43);
 
 var _controllersProtectionKeyController2 = _interopRequireDefault(_controllersProtectionKeyController);
 
-var _voNeedKey = __webpack_require__(56);
+var _voNeedKey = __webpack_require__(57);
 
 var _voNeedKey2 = _interopRequireDefault(_voNeedKey);
 
-var _voKeyError = __webpack_require__(52);
+var _voKeyError = __webpack_require__(53);
 
 var _voKeyError2 = _interopRequireDefault(_voKeyError);
 
-var _voKeyMessage = __webpack_require__(53);
+var _voKeyMessage = __webpack_require__(54);
 
 var _voKeyMessage2 = _interopRequireDefault(_voKeyMessage);
 
-var _voKeySystemConfiguration = __webpack_require__(55);
+var _voKeySystemConfiguration = __webpack_require__(56);
 
 var _voKeySystemConfiguration2 = _interopRequireDefault(_voKeySystemConfiguration);
 
-var _voKeySystemAccess = __webpack_require__(54);
+var _voKeySystemAccess = __webpack_require__(55);
 
 var _voKeySystemAccess2 = _interopRequireDefault(_voKeySystemAccess);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _utilsErrorHandler = __webpack_require__(21);
+var _utilsErrorHandler = __webpack_require__(22);
 
 var _utilsErrorHandler2 = _interopRequireDefault(_utilsErrorHandler);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -60386,7 +61004,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60437,31 +61055,31 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersProtectionKeyController = __webpack_require__(42);
+var _controllersProtectionKeyController = __webpack_require__(43);
 
 var _controllersProtectionKeyController2 = _interopRequireDefault(_controllersProtectionKeyController);
 
-var _voNeedKey = __webpack_require__(56);
+var _voNeedKey = __webpack_require__(57);
 
 var _voNeedKey2 = _interopRequireDefault(_voNeedKey);
 
-var _voKeyError = __webpack_require__(52);
+var _voKeyError = __webpack_require__(53);
 
 var _voKeyError2 = _interopRequireDefault(_voKeyError);
 
-var _voKeyMessage = __webpack_require__(53);
+var _voKeyMessage = __webpack_require__(54);
 
 var _voKeyMessage2 = _interopRequireDefault(_voKeyMessage);
 
-var _voKeySystemAccess = __webpack_require__(54);
+var _voKeySystemAccess = __webpack_require__(55);
 
 var _voKeySystemAccess2 = _interopRequireDefault(_voKeySystemAccess);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -60800,7 +61418,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60852,35 +61470,35 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersProtectionKeyController = __webpack_require__(42);
+var _controllersProtectionKeyController = __webpack_require__(43);
 
 var _controllersProtectionKeyController2 = _interopRequireDefault(_controllersProtectionKeyController);
 
-var _voNeedKey = __webpack_require__(56);
+var _voNeedKey = __webpack_require__(57);
 
 var _voNeedKey2 = _interopRequireDefault(_voNeedKey);
 
-var _voKeyError = __webpack_require__(52);
+var _voKeyError = __webpack_require__(53);
 
 var _voKeyError2 = _interopRequireDefault(_voKeyError);
 
-var _voKeyMessage = __webpack_require__(53);
+var _voKeyMessage = __webpack_require__(54);
 
 var _voKeyMessage2 = _interopRequireDefault(_voKeyMessage);
 
-var _voKeySystemConfiguration = __webpack_require__(55);
+var _voKeySystemConfiguration = __webpack_require__(56);
 
 var _voKeySystemConfiguration2 = _interopRequireDefault(_voKeySystemConfiguration);
 
-var _voKeySystemAccess = __webpack_require__(54);
+var _voKeySystemAccess = __webpack_require__(55);
 
 var _voKeySystemAccess2 = _interopRequireDefault(_voKeySystemAccess);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -61212,7 +61830,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61264,15 +61882,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voKeyPair = __webpack_require__(76);
+var _voKeyPair = __webpack_require__(77);
 
 var _voKeyPair2 = _interopRequireDefault(_voKeyPair);
 
-var _voClearKeyKeySet = __webpack_require__(75);
+var _voClearKeyKeySet = __webpack_require__(76);
 
 var _voClearKeyKeySet2 = _interopRequireDefault(_voClearKeyKeySet);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -61336,7 +61954,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61385,11 +62003,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _externalsBase64 = __webpack_require__(44);
+var _externalsBase64 = __webpack_require__(45);
 
 var _externalsBase642 = _interopRequireDefault(_externalsBase64);
 
@@ -61456,7 +62074,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61507,7 +62125,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -61553,7 +62171,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61595,7 +62213,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -61641,7 +62259,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61707,7 +62325,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61719,7 +62337,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMakerJs = __webpack_require__(12);
+var _coreFactoryMakerJs = __webpack_require__(13);
 
 var _coreFactoryMakerJs2 = _interopRequireDefault(_coreFactoryMakerJs);
 
@@ -61769,7 +62387,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61812,7 +62430,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -61896,7 +62514,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61908,7 +62526,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMakerJs = __webpack_require__(12);
+var _coreFactoryMakerJs = __webpack_require__(13);
 
 var _coreFactoryMakerJs2 = _interopRequireDefault(_coreFactoryMakerJs);
 
@@ -61970,7 +62588,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62012,51 +62630,51 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _ThroughputRule = __webpack_require__(282);
+var _ThroughputRule = __webpack_require__(283);
 
 var _ThroughputRule2 = _interopRequireDefault(_ThroughputRule);
 
-var _InsufficientBufferRule = __webpack_require__(280);
+var _InsufficientBufferRule = __webpack_require__(281);
 
 var _InsufficientBufferRule2 = _interopRequireDefault(_InsufficientBufferRule);
 
-var _AbandonRequestsRule = __webpack_require__(277);
+var _AbandonRequestsRule = __webpack_require__(278);
 
 var _AbandonRequestsRule2 = _interopRequireDefault(_AbandonRequestsRule);
 
-var _DroppedFramesRuleJs = __webpack_require__(279);
+var _DroppedFramesRuleJs = __webpack_require__(280);
 
 var _DroppedFramesRuleJs2 = _interopRequireDefault(_DroppedFramesRuleJs);
 
-var _SwitchHistoryRuleJs = __webpack_require__(281);
+var _SwitchHistoryRuleJs = __webpack_require__(282);
 
 var _SwitchHistoryRuleJs2 = _interopRequireDefault(_SwitchHistoryRuleJs);
 
-var _BolaRule = __webpack_require__(77);
+var _BolaRule = __webpack_require__(78);
 
 var _BolaRule2 = _interopRequireDefault(_BolaRule);
 
-var _BolaAbandonRule = __webpack_require__(278);
+var _BolaAbandonRule = __webpack_require__(279);
 
 var _BolaAbandonRule2 = _interopRequireDefault(_BolaAbandonRule);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _dashDashMetrics = __webpack_require__(22);
+var _dashDashMetrics = __webpack_require__(23);
 
 var _dashDashMetrics2 = _interopRequireDefault(_dashDashMetrics);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _SwitchRequestJs = __webpack_require__(19);
+var _SwitchRequestJs = __webpack_require__(20);
 
 var _SwitchRequestJs2 = _interopRequireDefault(_SwitchRequestJs);
 
@@ -62167,7 +62785,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62209,27 +62827,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _SwitchRequest = __webpack_require__(19);
+var _SwitchRequest = __webpack_require__(20);
 
 var _SwitchRequest2 = _interopRequireDefault(_SwitchRequest);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _dashDashMetrics = __webpack_require__(22);
+var _dashDashMetrics = __webpack_require__(23);
 
 var _dashDashMetrics2 = _interopRequireDefault(_dashDashMetrics);
 
-var _modelsMetricsModel = __webpack_require__(20);
+var _modelsMetricsModel = __webpack_require__(21);
 
 var _modelsMetricsModel2 = _interopRequireDefault(_modelsMetricsModel);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -62362,7 +62980,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62404,23 +63022,23 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _SwitchRequest = __webpack_require__(19);
+var _SwitchRequest = __webpack_require__(20);
 
 var _SwitchRequest2 = _interopRequireDefault(_SwitchRequest);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _BolaRule = __webpack_require__(77);
+var _BolaRule = __webpack_require__(78);
 
 var _BolaRule2 = _interopRequireDefault(_BolaRule);
 
@@ -62649,7 +63267,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62661,15 +63279,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMakerJs = __webpack_require__(12);
+var _coreFactoryMakerJs = __webpack_require__(13);
 
 var _coreFactoryMakerJs2 = _interopRequireDefault(_coreFactoryMakerJs);
 
-var _SwitchRequestJs = __webpack_require__(19);
+var _SwitchRequestJs = __webpack_require__(20);
 
 var _SwitchRequestJs2 = _interopRequireDefault(_SwitchRequestJs);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -62720,7 +63338,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62762,27 +63380,27 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersBufferController = __webpack_require__(25);
+var _controllersBufferController = __webpack_require__(26);
 
 var _controllersBufferController2 = _interopRequireDefault(_controllersBufferController);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _SwitchRequestJs = __webpack_require__(19);
+var _SwitchRequestJs = __webpack_require__(20);
 
 var _SwitchRequestJs2 = _interopRequireDefault(_SwitchRequestJs);
 
@@ -62864,7 +63482,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62876,15 +63494,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMakerJs = __webpack_require__(12);
+var _coreFactoryMakerJs = __webpack_require__(13);
 
 var _coreFactoryMakerJs2 = _interopRequireDefault(_coreFactoryMakerJs);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _SwitchRequestJs = __webpack_require__(19);
+var _SwitchRequestJs = __webpack_require__(20);
 
 var _SwitchRequestJs2 = _interopRequireDefault(_SwitchRequestJs);
 
@@ -62939,7 +63557,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62981,29 +63599,29 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _controllersBufferController = __webpack_require__(25);
+var _controllersBufferController = __webpack_require__(26);
 
 var _controllersBufferController2 = _interopRequireDefault(_controllersBufferController);
 
-var _controllersAbrController = __webpack_require__(24);
+var _controllersAbrController = __webpack_require__(25);
 
 var _controllersAbrController2 = _interopRequireDefault(_controllersAbrController);
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _voMetricsHTTPRequest = __webpack_require__(17);
+var _voMetricsHTTPRequest = __webpack_require__(18);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _SwitchRequestJs = __webpack_require__(19);
+var _SwitchRequestJs = __webpack_require__(20);
 
 var _SwitchRequestJs2 = _interopRequireDefault(_SwitchRequestJs);
 
@@ -63199,7 +63817,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63241,11 +63859,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _modelsMediaPlayerModel = __webpack_require__(16);
+var _modelsMediaPlayerModel = __webpack_require__(17);
 
 var _modelsMediaPlayerModel2 = _interopRequireDefault(_modelsMediaPlayerModel);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -63305,7 +63923,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63347,11 +63965,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -63427,7 +64045,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63469,7 +64087,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -63770,7 +64388,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63812,19 +64430,19 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _utilsInitCache = __webpack_require__(60);
+var _utilsInitCache = __webpack_require__(61);
 
 var _utilsInitCache2 = _interopRequireDefault(_utilsInitCache);
 
@@ -64000,7 +64618,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64042,15 +64660,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _controllersBufferController = __webpack_require__(25);
+var _controllersBufferController = __webpack_require__(26);
 
 var _controllersBufferController2 = _interopRequireDefault(_controllersBufferController);
 
-var _NotFragmentedTextBufferController = __webpack_require__(286);
+var _NotFragmentedTextBufferController = __webpack_require__(287);
 
 var _NotFragmentedTextBufferController2 = _interopRequireDefault(_NotFragmentedTextBufferController);
 
@@ -64179,7 +64797,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64221,55 +64839,55 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voTextTrackInfo = __webpack_require__(306);
+var _voTextTrackInfo = __webpack_require__(307);
 
 var _voTextTrackInfo2 = _interopRequireDefault(_voTextTrackInfo);
 
-var _dashUtilsFragmentedTextBoxParser = __webpack_require__(216);
+var _dashUtilsFragmentedTextBoxParser = __webpack_require__(217);
 
 var _dashUtilsFragmentedTextBoxParser2 = _interopRequireDefault(_dashUtilsFragmentedTextBoxParser);
 
-var _utilsBoxParser = __webpack_require__(58);
+var _utilsBoxParser = __webpack_require__(59);
 
 var _utilsBoxParser2 = _interopRequireDefault(_utilsBoxParser);
 
-var _utilsCustomTimeRanges = __webpack_require__(78);
+var _utilsCustomTimeRanges = __webpack_require__(79);
 
 var _utilsCustomTimeRanges2 = _interopRequireDefault(_utilsCustomTimeRanges);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
-var _modelsVideoModel = __webpack_require__(32);
+var _modelsVideoModel = __webpack_require__(33);
 
 var _modelsVideoModel2 = _interopRequireDefault(_modelsVideoModel);
 
-var _TextTracks = __webpack_require__(57);
+var _TextTracks = __webpack_require__(58);
 
 var _TextTracks2 = _interopRequireDefault(_TextTracks);
 
-var _EmbeddedTextHtmlRender = __webpack_require__(285);
+var _EmbeddedTextHtmlRender = __webpack_require__(286);
 
 var _EmbeddedTextHtmlRender2 = _interopRequireDefault(_EmbeddedTextHtmlRender);
 
-var _codemIsoboxer = __webpack_require__(62);
+var _codemIsoboxer = __webpack_require__(63);
 
 var _codemIsoboxer2 = _interopRequireDefault(_codemIsoboxer);
 
-var _externalsCea608Parser = __webpack_require__(63);
+var _externalsCea608Parser = __webpack_require__(64);
 
 var _externalsCea608Parser2 = _interopRequireDefault(_externalsCea608Parser);
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
@@ -64837,7 +65455,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64880,31 +65498,31 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreEventBus = __webpack_require__(14);
+var _coreEventBus = __webpack_require__(15);
 
 var _coreEventBus2 = _interopRequireDefault(_coreEventBus);
 
-var _coreEventsEvents = __webpack_require__(13);
+var _coreEventsEvents = __webpack_require__(14);
 
 var _coreEventsEvents2 = _interopRequireDefault(_coreEventsEvents);
 
-var _dashModelsDashManifestModel = __webpack_require__(23);
+var _dashModelsDashManifestModel = __webpack_require__(24);
 
 var _dashModelsDashManifestModel2 = _interopRequireDefault(_dashModelsDashManifestModel);
 
-var _controllersBlacklistController = __webpack_require__(233);
+var _controllersBlacklistController = __webpack_require__(234);
 
 var _controllersBlacklistController2 = _interopRequireDefault(_controllersBlacklistController);
 
-var _baseUrlResolutionDVBSelector = __webpack_require__(297);
+var _baseUrlResolutionDVBSelector = __webpack_require__(298);
 
 var _baseUrlResolutionDVBSelector2 = _interopRequireDefault(_baseUrlResolutionDVBSelector);
 
-var _baseUrlResolutionBasicSelector = __webpack_require__(296);
+var _baseUrlResolutionBasicSelector = __webpack_require__(297);
 
 var _baseUrlResolutionBasicSelector2 = _interopRequireDefault(_baseUrlResolutionBasicSelector);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -65006,7 +65624,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65048,7 +65666,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -65105,7 +65723,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65117,11 +65735,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _voError = __webpack_require__(18);
+var _voError = __webpack_require__(19);
 
 var _voError2 = _interopRequireDefault(_voError);
 
@@ -65396,7 +66014,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65439,11 +66057,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _voIsoBox = __webpack_require__(301);
+var _voIsoBox = __webpack_require__(302);
 
 var _voIsoBox2 = _interopRequireDefault(_voIsoBox);
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -65674,7 +66292,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65717,7 +66335,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -65756,7 +66374,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65798,15 +66416,15 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _externalsXml2json = __webpack_require__(45);
+var _externalsXml2json = __webpack_require__(46);
 
 var _externalsXml2json2 = _interopRequireDefault(_externalsXml2json);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -67242,7 +67860,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67284,11 +67902,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
-var _coreDebug = __webpack_require__(15);
+var _coreDebug = __webpack_require__(16);
 
 var _coreDebug2 = _interopRequireDefault(_coreDebug);
 
@@ -67450,7 +68068,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67493,7 +68111,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -67532,7 +68150,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 297 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67574,7 +68192,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFactoryMaker = __webpack_require__(12);
+var _coreFactoryMaker = __webpack_require__(13);
 
 var _coreFactoryMaker2 = _interopRequireDefault(_coreFactoryMaker);
 
@@ -67690,7 +68308,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67752,7 +68370,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67822,7 +68440,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67874,7 +68492,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _FragmentRequest2 = __webpack_require__(29);
+var _FragmentRequest2 = __webpack_require__(30);
 
 var _FragmentRequest3 = _interopRequireDefault(_FragmentRequest2);
 
@@ -67898,7 +68516,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67959,7 +68577,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68023,7 +68641,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68096,7 +68714,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 304 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68166,7 +68784,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 305 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68230,7 +68848,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 306 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68295,7 +68913,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 307 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68358,7 +68976,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68436,7 +69054,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68498,7 +69116,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68571,7 +69189,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68615,7 +69233,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _controllersBufferController = __webpack_require__(25);
+var _controllersBufferController = __webpack_require__(26);
 
 var _controllersBufferController2 = _interopRequireDefault(_controllersBufferController);
 
@@ -68648,7 +69266,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68724,7 +69342,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68794,7 +69412,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68998,7 +69616,7 @@ exports.ManifestUpdateTrackInfo = ManifestUpdateTrackInfo;
 
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69084,7 +69702,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69155,7 +69773,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69262,7 +69880,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69347,10 +69965,10 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var map = __webpack_require__(320);
+var map = __webpack_require__(321);
 
 var getCountryCode = function(localeString) {
     var components = localeString.split("_");
@@ -69384,7 +70002,7 @@ exports.getLocales = function(currencyCode) {
 }
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports) {
 
 // Generated using ShowCurrencies.java
@@ -69642,7 +70260,7 @@ ZW: 'ZWL'
 module.exports = map;
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*! Moment Duration Format v1.3.0
@@ -69833,7 +70451,7 @@ module.exports = map;
 	var moment;
 
 	if (true) {
-		try { moment = __webpack_require__(11); } 
+		try { moment = __webpack_require__(12); } 
 		catch (e) {}
 	} 
 	
@@ -70130,240 +70748,240 @@ module.exports = map;
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 81,
-	"./af.js": 81,
-	"./ar": 88,
-	"./ar-dz": 82,
-	"./ar-dz.js": 82,
-	"./ar-kw": 83,
-	"./ar-kw.js": 83,
-	"./ar-ly": 84,
-	"./ar-ly.js": 84,
-	"./ar-ma": 85,
-	"./ar-ma.js": 85,
-	"./ar-sa": 86,
-	"./ar-sa.js": 86,
-	"./ar-tn": 87,
-	"./ar-tn.js": 87,
-	"./ar.js": 88,
-	"./az": 89,
-	"./az.js": 89,
-	"./be": 90,
-	"./be.js": 90,
-	"./bg": 91,
-	"./bg.js": 91,
-	"./bn": 92,
-	"./bn.js": 92,
-	"./bo": 93,
-	"./bo.js": 93,
-	"./br": 94,
-	"./br.js": 94,
-	"./bs": 95,
-	"./bs.js": 95,
-	"./ca": 96,
-	"./ca.js": 96,
-	"./cs": 97,
-	"./cs.js": 97,
-	"./cv": 98,
-	"./cv.js": 98,
-	"./cy": 99,
-	"./cy.js": 99,
-	"./da": 100,
-	"./da.js": 100,
-	"./de": 103,
-	"./de-at": 101,
-	"./de-at.js": 101,
-	"./de-ch": 102,
-	"./de-ch.js": 102,
-	"./de.js": 103,
-	"./dv": 104,
-	"./dv.js": 104,
-	"./el": 105,
-	"./el.js": 105,
-	"./en-au": 106,
-	"./en-au.js": 106,
-	"./en-ca": 107,
-	"./en-ca.js": 107,
-	"./en-gb": 108,
-	"./en-gb.js": 108,
-	"./en-ie": 109,
-	"./en-ie.js": 109,
-	"./en-nz": 110,
-	"./en-nz.js": 110,
-	"./eo": 111,
-	"./eo.js": 111,
-	"./es": 113,
-	"./es-do": 112,
-	"./es-do.js": 112,
-	"./es.js": 113,
-	"./et": 114,
-	"./et.js": 114,
-	"./eu": 115,
-	"./eu.js": 115,
-	"./fa": 116,
-	"./fa.js": 116,
-	"./fi": 117,
-	"./fi.js": 117,
-	"./fo": 118,
-	"./fo.js": 118,
-	"./fr": 121,
-	"./fr-ca": 119,
-	"./fr-ca.js": 119,
-	"./fr-ch": 120,
-	"./fr-ch.js": 120,
-	"./fr.js": 121,
-	"./fy": 122,
-	"./fy.js": 122,
-	"./gd": 123,
-	"./gd.js": 123,
-	"./gl": 124,
-	"./gl.js": 124,
-	"./gom-latn": 125,
-	"./gom-latn.js": 125,
-	"./he": 126,
-	"./he.js": 126,
-	"./hi": 127,
-	"./hi.js": 127,
-	"./hr": 128,
-	"./hr.js": 128,
-	"./hu": 129,
-	"./hu.js": 129,
-	"./hy-am": 130,
-	"./hy-am.js": 130,
-	"./id": 131,
-	"./id.js": 131,
-	"./is": 132,
-	"./is.js": 132,
-	"./it": 133,
-	"./it.js": 133,
-	"./ja": 134,
-	"./ja.js": 134,
-	"./jv": 135,
-	"./jv.js": 135,
-	"./ka": 136,
-	"./ka.js": 136,
-	"./kk": 137,
-	"./kk.js": 137,
-	"./km": 138,
-	"./km.js": 138,
-	"./kn": 139,
-	"./kn.js": 139,
-	"./ko": 140,
-	"./ko.js": 140,
-	"./ky": 141,
-	"./ky.js": 141,
-	"./lb": 142,
-	"./lb.js": 142,
-	"./lo": 143,
-	"./lo.js": 143,
-	"./lt": 144,
-	"./lt.js": 144,
-	"./lv": 145,
-	"./lv.js": 145,
-	"./me": 146,
-	"./me.js": 146,
-	"./mi": 147,
-	"./mi.js": 147,
-	"./mk": 148,
-	"./mk.js": 148,
-	"./ml": 149,
-	"./ml.js": 149,
-	"./mr": 150,
-	"./mr.js": 150,
-	"./ms": 152,
-	"./ms-my": 151,
-	"./ms-my.js": 151,
-	"./ms.js": 152,
-	"./my": 153,
-	"./my.js": 153,
-	"./nb": 154,
-	"./nb.js": 154,
-	"./ne": 155,
-	"./ne.js": 155,
-	"./nl": 157,
-	"./nl-be": 156,
-	"./nl-be.js": 156,
-	"./nl.js": 157,
-	"./nn": 158,
-	"./nn.js": 158,
-	"./pa-in": 159,
-	"./pa-in.js": 159,
-	"./pl": 160,
-	"./pl.js": 160,
-	"./pt": 162,
-	"./pt-br": 161,
-	"./pt-br.js": 161,
-	"./pt.js": 162,
-	"./ro": 163,
-	"./ro.js": 163,
-	"./ru": 164,
-	"./ru.js": 164,
-	"./sd": 165,
-	"./sd.js": 165,
-	"./se": 166,
-	"./se.js": 166,
-	"./si": 167,
-	"./si.js": 167,
-	"./sk": 168,
-	"./sk.js": 168,
-	"./sl": 169,
-	"./sl.js": 169,
-	"./sq": 170,
-	"./sq.js": 170,
-	"./sr": 172,
-	"./sr-cyrl": 171,
-	"./sr-cyrl.js": 171,
-	"./sr.js": 172,
-	"./ss": 173,
-	"./ss.js": 173,
-	"./sv": 174,
-	"./sv.js": 174,
-	"./sw": 175,
-	"./sw.js": 175,
-	"./ta": 176,
-	"./ta.js": 176,
-	"./te": 177,
-	"./te.js": 177,
-	"./tet": 178,
-	"./tet.js": 178,
-	"./th": 179,
-	"./th.js": 179,
-	"./tl-ph": 180,
-	"./tl-ph.js": 180,
-	"./tlh": 181,
-	"./tlh.js": 181,
-	"./tr": 182,
-	"./tr.js": 182,
-	"./tzl": 183,
-	"./tzl.js": 183,
-	"./tzm": 185,
-	"./tzm-latn": 184,
-	"./tzm-latn.js": 184,
-	"./tzm.js": 185,
-	"./uk": 186,
-	"./uk.js": 186,
-	"./ur": 187,
-	"./ur.js": 187,
-	"./uz": 189,
-	"./uz-latn": 188,
-	"./uz-latn.js": 188,
-	"./uz.js": 189,
-	"./vi": 190,
-	"./vi.js": 190,
-	"./x-pseudo": 191,
-	"./x-pseudo.js": 191,
-	"./yo": 192,
-	"./yo.js": 192,
-	"./zh-cn": 193,
-	"./zh-cn.js": 193,
-	"./zh-hk": 194,
-	"./zh-hk.js": 194,
-	"./zh-tw": 195,
-	"./zh-tw.js": 195
+	"./af": 82,
+	"./af.js": 82,
+	"./ar": 89,
+	"./ar-dz": 83,
+	"./ar-dz.js": 83,
+	"./ar-kw": 84,
+	"./ar-kw.js": 84,
+	"./ar-ly": 85,
+	"./ar-ly.js": 85,
+	"./ar-ma": 86,
+	"./ar-ma.js": 86,
+	"./ar-sa": 87,
+	"./ar-sa.js": 87,
+	"./ar-tn": 88,
+	"./ar-tn.js": 88,
+	"./ar.js": 89,
+	"./az": 90,
+	"./az.js": 90,
+	"./be": 91,
+	"./be.js": 91,
+	"./bg": 92,
+	"./bg.js": 92,
+	"./bn": 93,
+	"./bn.js": 93,
+	"./bo": 94,
+	"./bo.js": 94,
+	"./br": 95,
+	"./br.js": 95,
+	"./bs": 96,
+	"./bs.js": 96,
+	"./ca": 97,
+	"./ca.js": 97,
+	"./cs": 98,
+	"./cs.js": 98,
+	"./cv": 99,
+	"./cv.js": 99,
+	"./cy": 100,
+	"./cy.js": 100,
+	"./da": 101,
+	"./da.js": 101,
+	"./de": 104,
+	"./de-at": 102,
+	"./de-at.js": 102,
+	"./de-ch": 103,
+	"./de-ch.js": 103,
+	"./de.js": 104,
+	"./dv": 105,
+	"./dv.js": 105,
+	"./el": 106,
+	"./el.js": 106,
+	"./en-au": 107,
+	"./en-au.js": 107,
+	"./en-ca": 108,
+	"./en-ca.js": 108,
+	"./en-gb": 109,
+	"./en-gb.js": 109,
+	"./en-ie": 110,
+	"./en-ie.js": 110,
+	"./en-nz": 111,
+	"./en-nz.js": 111,
+	"./eo": 112,
+	"./eo.js": 112,
+	"./es": 114,
+	"./es-do": 113,
+	"./es-do.js": 113,
+	"./es.js": 114,
+	"./et": 115,
+	"./et.js": 115,
+	"./eu": 116,
+	"./eu.js": 116,
+	"./fa": 117,
+	"./fa.js": 117,
+	"./fi": 118,
+	"./fi.js": 118,
+	"./fo": 119,
+	"./fo.js": 119,
+	"./fr": 122,
+	"./fr-ca": 120,
+	"./fr-ca.js": 120,
+	"./fr-ch": 121,
+	"./fr-ch.js": 121,
+	"./fr.js": 122,
+	"./fy": 123,
+	"./fy.js": 123,
+	"./gd": 124,
+	"./gd.js": 124,
+	"./gl": 125,
+	"./gl.js": 125,
+	"./gom-latn": 126,
+	"./gom-latn.js": 126,
+	"./he": 127,
+	"./he.js": 127,
+	"./hi": 128,
+	"./hi.js": 128,
+	"./hr": 129,
+	"./hr.js": 129,
+	"./hu": 130,
+	"./hu.js": 130,
+	"./hy-am": 131,
+	"./hy-am.js": 131,
+	"./id": 132,
+	"./id.js": 132,
+	"./is": 133,
+	"./is.js": 133,
+	"./it": 134,
+	"./it.js": 134,
+	"./ja": 135,
+	"./ja.js": 135,
+	"./jv": 136,
+	"./jv.js": 136,
+	"./ka": 137,
+	"./ka.js": 137,
+	"./kk": 138,
+	"./kk.js": 138,
+	"./km": 139,
+	"./km.js": 139,
+	"./kn": 140,
+	"./kn.js": 140,
+	"./ko": 141,
+	"./ko.js": 141,
+	"./ky": 142,
+	"./ky.js": 142,
+	"./lb": 143,
+	"./lb.js": 143,
+	"./lo": 144,
+	"./lo.js": 144,
+	"./lt": 145,
+	"./lt.js": 145,
+	"./lv": 146,
+	"./lv.js": 146,
+	"./me": 147,
+	"./me.js": 147,
+	"./mi": 148,
+	"./mi.js": 148,
+	"./mk": 149,
+	"./mk.js": 149,
+	"./ml": 150,
+	"./ml.js": 150,
+	"./mr": 151,
+	"./mr.js": 151,
+	"./ms": 153,
+	"./ms-my": 152,
+	"./ms-my.js": 152,
+	"./ms.js": 153,
+	"./my": 154,
+	"./my.js": 154,
+	"./nb": 155,
+	"./nb.js": 155,
+	"./ne": 156,
+	"./ne.js": 156,
+	"./nl": 158,
+	"./nl-be": 157,
+	"./nl-be.js": 157,
+	"./nl.js": 158,
+	"./nn": 159,
+	"./nn.js": 159,
+	"./pa-in": 160,
+	"./pa-in.js": 160,
+	"./pl": 161,
+	"./pl.js": 161,
+	"./pt": 163,
+	"./pt-br": 162,
+	"./pt-br.js": 162,
+	"./pt.js": 163,
+	"./ro": 164,
+	"./ro.js": 164,
+	"./ru": 165,
+	"./ru.js": 165,
+	"./sd": 166,
+	"./sd.js": 166,
+	"./se": 167,
+	"./se.js": 167,
+	"./si": 168,
+	"./si.js": 168,
+	"./sk": 169,
+	"./sk.js": 169,
+	"./sl": 170,
+	"./sl.js": 170,
+	"./sq": 171,
+	"./sq.js": 171,
+	"./sr": 173,
+	"./sr-cyrl": 172,
+	"./sr-cyrl.js": 172,
+	"./sr.js": 173,
+	"./ss": 174,
+	"./ss.js": 174,
+	"./sv": 175,
+	"./sv.js": 175,
+	"./sw": 176,
+	"./sw.js": 176,
+	"./ta": 177,
+	"./ta.js": 177,
+	"./te": 178,
+	"./te.js": 178,
+	"./tet": 179,
+	"./tet.js": 179,
+	"./th": 180,
+	"./th.js": 180,
+	"./tl-ph": 181,
+	"./tl-ph.js": 181,
+	"./tlh": 182,
+	"./tlh.js": 182,
+	"./tr": 183,
+	"./tr.js": 183,
+	"./tzl": 184,
+	"./tzl.js": 184,
+	"./tzm": 186,
+	"./tzm-latn": 185,
+	"./tzm-latn.js": 185,
+	"./tzm.js": 186,
+	"./uk": 187,
+	"./uk.js": 187,
+	"./ur": 188,
+	"./ur.js": 188,
+	"./uz": 190,
+	"./uz-latn": 189,
+	"./uz-latn.js": 189,
+	"./uz.js": 190,
+	"./vi": 191,
+	"./vi.js": 191,
+	"./x-pseudo": 192,
+	"./x-pseudo.js": 192,
+	"./yo": 193,
+	"./yo.js": 193,
+	"./zh-cn": 194,
+	"./zh-cn.js": 194,
+	"./zh-hk": 195,
+	"./zh-hk.js": 195,
+	"./zh-tw": 196,
+	"./zh-tw.js": 196
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -70379,10 +70997,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 322;
+webpackContext.id = 323;
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70479,7 +71097,13 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 324 */
+/* 325 */
+/***/ (function(module, exports) {
+
+module.exports = "<header>\n    <div class=\"dirButton\">\n        <button type=\"\" v-on:click=changeDirection>Change text direction?</button>\n    </div>\n    <div class=\"backgroundImage\" v-bind:style=\"{ 'background-image': 'url(' + backdropUrl + ')' }\"></div>\n    <div class=\"panorama\">\n        <div class=\"wrapper\">\n            <div class=\"posterWrapper\">\n                <img :src=posterUrl alt=\"movie poster\">\n            </div>\n            <div class=\"info\">\n                <div class=\"headInfo\" v-bind:style=\"{direction: $data.direction}\">\n                    <h1 class=\"title\">{{ info.title }}</h1>\n                    <h2 class=\"release\">({{ releaseYear }})</h2>\n                    <h2 class=\"original_title\" v-if=\"info.title !== info.original_title\">{{ info.original_title }}</h2>\n                    <h3 class=\"tagline\">{{ info.tagline }}</h3>\n                </div>\n                <div class=\"overview\" v-bind:style=\"{direction: $data.direction}\">\n                    {{ info.overview }}\n                    <a :href=info.homepage>{{ info.homepage }}</a>\n                </div>\n                <div class=\"moreInfo\" v-bind:style=\"{direction: $data.direction}\">\n                    <div class=\"buttonContainer\">\n                        <a href=\"#player\" class=\"myButton\">Play</a>\n                    </div>\n                    <div class=\"col1\">\n                        <div class=\"scoreContainer\">\n                            <p>Score</p>\n                            <div class=\"rateBack\">\n                                <div class=\"rate\" v-bind:style=\"{ width: ratingPercentage }\">\n                                    <div>{{ ratingPercentage }}</div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"extendedInfo\">\n                        <div class=\"col2\">\n                            <p class=\"infoTitle\">Genre</p>\n                            <ul>\n                                <li v-for=\"genre in info.genres\">{{ genre.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Original language</p>\n                            <p>{{ info.original_language }}</p>\n                            <p class=\"infoTitle\">Runtime</p>\n                            <p>{{ hoursAndMin }}</p>\n                        </div>\n                        <div class=\"col2\">\n                            <p class=\"infoTitle\">Spoken languages</p>\n                            <ul>\n                                <li v-for=\"lang in info.spoken_languages\">{{ lang.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Production countries</p>\n                            <ul>\n                                <li v-for=\"country in info.production_countries\">{{ country.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Budget</p>\n                            <p>{{ budgetFormat }}</p>\n                        </div>\n                                        </div>\n                    </div>\n\n            </div>\n        </div>\n    </div>\n    <div id=\"player\" class=\"videoWrapper\">\n        <div class=\"videoContainer\" ref=\"videoContainer\">\n            <video ref=\"videoElement\" controls :src=\"$data.video_url\"></video>\n            <div  class=\"videoCaption\" ref=\"videoCaption\" v-bind:style=\"{direction: $data.direction}\"></div>\n        </div>\n    </div>\n</header>"
+
+/***/ }),
+/* 326 */
 /***/ (function(module, exports) {
 
 /**
@@ -70538,7 +71162,7 @@ module.exports.polyfill = function() {
 
 
 /***/ }),
-/* 325 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -70945,7 +71569,16 @@ return VueScrollTo$1;
 
 
 /***/ }),
-/* 326 */
+/* 328 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+	throw new Error("define cannot be used indirect");
+};
+
+
+/***/ }),
+/* 329 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -70971,12 +71604,6 @@ module.exports = function(module) {
 	return module;
 };
 
-
-/***/ }),
-/* 327 */
-/***/ (function(module, exports) {
-
-module.exports = "<header>\n    <div class=\"dirButton\">\n        <button type=\"\" v-on:click=changeDirection>Change text direction?</button>\n    </div>\n    <div class=\"backgroundImage\" v-bind:style=\"{ 'background-image': 'url(' + backdropUrl + ')' }\"></div>\n    <div class=\"panorama\">\n        <div class=\"wrapper\">\n            <div class=\"posterWrapper\">\n                <img :src=posterUrl alt=\"movie poster\">\n            </div>\n            <div class=\"info\">\n                <div class=\"headInfo\" v-bind:style=\"{direction: $data.direction}\">\n                    <h1 class=\"title\">{{ info.title }}</h1>\n                    <h2 class=\"release\">({{ releaseYear }})</h2>\n                    <h2 class=\"original_title\" v-if=\"info.title !== info.original_title\">{{ info.original_title }}</h2>\n                    <h3 class=\"tagline\">{{ info.tagline }}</h3>\n                </div>\n                <div class=\"overview\" v-bind:style=\"{direction: $data.direction}\">\n                    {{ info.overview }}\n                    <a :href=info.homepage>{{ info.homepage }}</a>\n                </div>\n                <div class=\"moreInfo\" v-bind:style=\"{direction: $data.direction}\">\n                    <div class=\"buttonContainer\">\n                        <a href=\"#player\" class=\"myButton\">Play</a>\n                    </div>\n                    <div class=\"col1\">\n                        <div class=\"scoreContainer\">\n                            <p>Score</p>\n                            <div class=\"rateBack\">\n                                <div class=\"rate\" v-bind:style=\"{ width: ratingPercentage }\">\n                                    <div>{{ ratingPercentage }}</div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"extendedInfo\">\n                        <div class=\"col2\">\n                            <p class=\"infoTitle\">Genre</p>\n                            <ul>\n                                <li v-for=\"genre in info.genres\">{{ genre.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Original language</p>\n                            <p>{{ info.original_language }}</p>\n                            <p class=\"infoTitle\">Runtime</p>\n                            <p>{{ hoursAndMin }}</p>\n                        </div>\n                        <div class=\"col2\">\n                            <p class=\"infoTitle\">Spoken languages</p>\n                            <ul>\n                                <li v-for=\"lang in info.spoken_languages\">{{ lang.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Production countries</p>\n                            <ul>\n                                <li v-for=\"country in info.production_countries\">{{ country.name }}</li>\n                            </ul>\n                            <p class=\"infoTitle\">Budget</p>\n                            <p>{{ budgetFormat }}</p>\n                        </div>\n                                        </div>\n                    </div>\n\n            </div>\n        </div>\n    </div>\n    <div id=\"player\" class=\"videoWrapper\">\n        <div class=\"videoContainer\" ref=\"videoContainer\">\n            <video ref=\"videoElement\" controls></video>\n            <div  class=\"videoCaption\" ref=\"videoCaption\" v-bind:style=\"{direction: $data.direction}\"></div>\n        </div>\n    </div>\n</header>"
 
 /***/ })
 /******/ ]);

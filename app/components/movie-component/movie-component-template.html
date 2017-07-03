@@ -64,7 +64,7 @@
     </div>
     <div id="player" class="videoWrapper">
         <div class="videoContainer" ref="videoContainer">
-            <video ref="videoElement" controls></video>
+            <video ref="videoElement" controls :src="$data.video_url"></video>
             <div  class="videoCaption" ref="videoCaption" v-bind:style="{direction: $data.direction}"></div>
         </div>
     </div>
