@@ -4,6 +4,7 @@ separation = 1%
   padding 3%
   z-index 5
   position relative
+  min-height 620px
   background-color backdrop-layer-color
 
   .wrapper
@@ -53,22 +54,35 @@ separation = 1%
           margin-bottom separation
       .moreInfo
         margin-top separation*4
+        .buttonContainer
+          text-align center
+        .scoreContainer
+          width 50%
+          margin-top separation*5
+          p
+            margin-bottom separation
         +below('tablet')
           padding-top separation
           border-top 2px solid
-        .col
-          column(1/3)
-
-        p
-          margin separation 0
-        ul
-          margin-top separation
-        li
-          margin-right separation
-          list-style none
-          display inline-block
-        .infoTitle
-          font-style bold
+        .col1
+          width 100%
+          center()
+          stack()
+        .extendedInfo
+          margin-top 6%
+          .col2
+            column(1/2)
+          p
+            margin separation 0
+          ul
+            margin-top separation
+          li
+            margin-right separation
+            list-style none
+            display inline-block
+          .infoTitle
+            color lightness(text-color, 85%)
+            margin-top separation*10
         +below('desktop')
           stack()
       +below('tablet')

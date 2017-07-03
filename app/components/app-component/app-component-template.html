@@ -17,42 +17,49 @@
                     <a :href=info.homepage>{{ info.homepage }}</a>
                 </div>
                 <div class="moreInfo">
-                    <div class="col">
-                        <p>Score</p>
-                        <div class="rateBack">
-                            <div class="rate" v-bind:style="{ width: ratingPercentage }">
-                                <div>{{ ratingPercentage }}</div>
+                    <div class="col1">
+                        <div class="buttonContainer">
+                            <a href="#player" class="myButton">Play</a>
+                        </div>
+                        <div class="scoreContainer">
+                            <p>Score</p>
+                            <div class="rateBack">
+                                <div class="rate" v-bind:style="{ width: ratingPercentage }">
+                                    <div>{{ ratingPercentage }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <p>Genre</p>
-                        <ul>
-                            <li v-for="genre in info.genres">{{ genre.name }}</li>
-                        </ul>
-                        <p class="infoTitle">Original language</p>
-                        <p>{{ info.original_language }}</p>
-                        <p>Runtime</p>
-                        <p>{{ hoursAndMin }}</p>
+                    <div class="extendedInfo">
+                        <div class="col2">
+                            <p class="infoTitle">Genre</p>
+                            <ul>
+                                <li v-for="genre in info.genres">{{ genre.name }}</li>
+                            </ul>
+                            <p class="infoTitle">Original language</p>
+                            <p>{{ info.original_language }}</p>
+                            <p>Runtime</p>
+                            <p>{{ hoursAndMin }}</p>
+                        </div>
+                        <div class="col2">
+                            <p class="infoTitle">Spoken languages</p>
+                            <ul>
+                                <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
+                            </ul>
+                            <p class="infoTitle">Production countries</p>
+                            <ul>
+                                <li v-for="country in info.production_countries">{{ country.name }}</li>
+                            </ul>
+                            <p class="infoTitle">Budget</p>
+                            <p>{{ budgetFormat }}</p>
+                        </div>
+                                        </div>
                     </div>
-                    <div class="col">
-                        <p class="infoTitle">Spoken languages</p>
-                        <ul>
-                            <li v-for="lang in info.spoken_languages">{{ lang.name }}</li>
-                        </ul>
-                        <p class="infoTitle">Production countries</p>
-                        <ul>
-                            <li v-for="country in info.production_countries">{{ country.name }}</li>
-                        </ul>
-                        <p class="infoTitle">Budget</p>
-                        <p>{{ budgetFormat }}</p>
-                    </div>
-                </div>
 
             </div>
         </div>
     </div>
-    <div class="videoWrapper">
+    <div id="player" class="videoWrapper">
         <div class="videoContainer" ref="videoContainer">
             <video ref="videoElement" controls></video>
             <div  class="videoCaption" ref="videoCaption"></div>
