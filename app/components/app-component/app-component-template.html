@@ -6,7 +6,7 @@
                 <img :src=posterUrl alt="movie poster">
             </div>
             <div class="info">
-                <div class="headInfo">
+                <div class="headInfo" v-bind:style="{direction: changeDirection}">
                     <h1 class="title">{{ info.title }}</h1>
                     <h2 class="release">({{ releaseYear }})</h2>
                     <h2 class="original_title" v-if="info.title !== info.original_title">{{ info.original_title }}</h2>

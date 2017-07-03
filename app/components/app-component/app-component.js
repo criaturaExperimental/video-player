@@ -17,7 +17,7 @@ const AppComponent = Vue.extend({
   ],
   data() {
     return {
-      test: true
+      direction: 'rtl'
     }
   },
   computed: {
@@ -38,15 +38,15 @@ const AppComponent = Vue.extend({
     },
     ratingPercentage() {
       return `${this.info.vote_average * 10}%`
+    },
+    changeDirection() {
+      return this.direction
     }
   },
 
   methods: {
     initializeVideo() {
       const url = mainConfig.video_url;
-      const options = {
-        captions: true
-      }
       const player = MediaPlayer().create();
       player.initialize(this.$refs.videoElement, url, false)
       player.attachTTMLRenderingDiv(this.$refs.videoCaption)
